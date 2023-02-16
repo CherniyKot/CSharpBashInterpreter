@@ -5,7 +5,10 @@ using CSharpBashInterpreter.Commands.MetaCommands.Utility;
 using CSharpBashInterpreter.Semantics;
 
 Parser.MetaCommands.AddRange(new[] { new CommandFactory<Pipe>() });
-Parser.Commands.AddRange(new []{new CommandFactory<CatCommand>()});
+Parser.Commands.AddRange(new List<ICommandFactory<BasicTerminalCommand>>{
+    new CommandFactory<CatCommand>(), 
+    new CommandFactory<LSCommand>()
+});
 
 Console.CancelKeyPress += (sender, eventArgs) =>
 {
