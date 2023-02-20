@@ -2,5 +2,5 @@
 
 class SpaceTokenParser : ITokenParser
 {
-    public List<string> Tokenize(string input) => input.Split().ToList();
+    public string[] Tokenize(string input) => input.Split().ToArray();
 }

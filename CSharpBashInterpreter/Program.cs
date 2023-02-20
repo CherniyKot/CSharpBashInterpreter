@@ -1,7 +1,7 @@
-﻿using CSharpBashInterpreter.Commands;
-using CSharpBashInterpreter.Commands.BasicCommands;
-using CSharpBashInterpreter.Commands.MetaCommands;
-using CSharpBashInterpreter.Commands.MetaCommands.Utility;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Commands.Basic;
+using CSharpBashInterpreter.Commands.Meta;
+using CSharpBashInterpreter.Commands.Meta.Utility;
 using CSharpBashInterpreter.Semantics;
 
 Console.CancelKeyPress += (_, eventArgs) =>
@@ -10,10 +10,11 @@ Console.CancelKeyPress += (_, eventArgs) =>
     InterruptableConsoleStream.Interrupt();
 };
 
+var context = new DefaultContext();
 var tokenParser = new SpaceTokenParser();
 var commandsParser = new DefaultCommandsParser
 {
-    Commands = new ITerminalCommandRepresentation[]{ new CatCommandRepresentation() },
+    Commands = new ICommandRepresentation[]{ new CatCommandRepresentation() },
     MetaCommands = new IMetaCommandRepresentation[]{ new PipeCommandRepresentation() }
 };
 
@@ -23,7 +24,7 @@ while (true)
     {
         var line = Console.ReadLine() ?? "";
         var tokens = tokenParser.Tokenize(line);
-        var command = await commandsParser.Parse(tokens);
+        var command = commandsParser.Parse(tokens, context);
         await command.Execute();
     }
     catch (Exception e)

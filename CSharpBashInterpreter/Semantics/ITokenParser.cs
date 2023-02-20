@@ -2,5 +2,5 @@
 
 public interface ITokenParser
 {
-    List<string> Tokenize(string input);
+    string[] Tokenize(string input);
 }
