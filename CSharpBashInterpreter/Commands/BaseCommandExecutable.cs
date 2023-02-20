@@ -1,4 +1,5 @@
-﻿using CSharpBashInterpreter.Commands.MetaCommands.Utility;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Commands.Meta.Utility;
 
 namespace CSharpBashInterpreter.Commands;
 
@@ -8,12 +9,11 @@ public abstract class BaseCommandExecutable : ICommandExecutable
     public StreamWriter OutputStream { get; set; } = new(Console.OpenStandardOutput());
     public StreamWriter ErrorStream { get; set; } = new(Console.OpenStandardError());
 
-    protected string[] Tokens { get; private set; } = null!;
+    protected readonly string[] Tokens;
 
-    public virtual Task Initialize(IEnumerable<string> tokens)
+    protected BaseCommandExecutable(IEnumerable<string> tokens)
     {
         Tokens = tokens.ToArray();
-        return Task.CompletedTask;
     }
 
     public abstract Task Execute();

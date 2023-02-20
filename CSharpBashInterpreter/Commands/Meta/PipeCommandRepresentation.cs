@@ -1,6 +1,7 @@
-﻿using CSharpBashInterpreter.Semantics;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Semantics;
 
-namespace CSharpBashInterpreter.Commands.MetaCommands;
+namespace CSharpBashInterpreter.Commands.Meta;
 
 public class PipeCommandRepresentation : IMetaCommandRepresentation
 {
@@ -17,10 +18,8 @@ public class PipeCommandRepresentation : IMetaCommandRepresentation
         return tokens.Contains(_delimiter);
     }
 
-    public async Task<BaseCommandExecutable> Build(IEnumerable<string> tokens, ICommandParser parser)
+    public BaseCommandExecutable Build(IEnumerable<string> tokens, IContext context, ICommandParser parser)
     {
-        var command = new PipeCommandExecutable(_delimiter, parser);
-        await command.Initialize(tokens);
-        return command;
+        return new PipeCommandExecutable(tokens, _delimiter, context, parser);
     }
 }
