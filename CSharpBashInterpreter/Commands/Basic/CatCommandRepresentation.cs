@@ -1,6 +1,4 @@
-﻿using CSharpBashInterpreter.Commands.Meta;
-
-namespace CSharpBashInterpreter.Commands.Basic;
+﻿namespace CSharpBashInterpreter.Commands.Basic;
 
 public class CatCommandRepresentation : BaseCommandRepresentation
 {

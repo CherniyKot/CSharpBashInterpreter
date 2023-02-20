@@ -1,6 +1,6 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 
-namespace CSharpBashInterpreter.Commands.Meta;
+namespace CSharpBashInterpreter.Commands.Basic;
 
 public abstract class BaseCommandRepresentation : ICommandRepresentation
 {
