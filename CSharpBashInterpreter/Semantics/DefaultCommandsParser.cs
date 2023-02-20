@@ -9,7 +9,7 @@ public class DefaultCommandsParser : ICommandParser
 {
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
     public required ITerminalCommandRepresentation[] Commands { get; init; }
-    
+
     public virtual async Task<BaseCommandExecutable> Parse(IEnumerable<string> tokens)
     {
         foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(tokens)))

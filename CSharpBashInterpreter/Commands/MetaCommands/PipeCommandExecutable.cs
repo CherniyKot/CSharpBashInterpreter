@@ -7,7 +7,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
 {
     private readonly ICommandParser _parser;
     private readonly string _delimiter;
-        
+
     private BaseCommandExecutable? _left;
     private BaseCommandExecutable? _right;
 
@@ -18,7 +18,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
         _delimiter = delimiter;
         _parser = parser;
     }
-        
+
     public override async Task Initialize(IEnumerable<string> tokens)
     {
         var tokenList = tokens.ToList();
@@ -34,7 +34,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
     {
         var leftTask = _left.Execute();
         var rightTask = _right.Execute();
-            
+
         await Task.WhenAll(leftTask, rightTask);
     }
 }

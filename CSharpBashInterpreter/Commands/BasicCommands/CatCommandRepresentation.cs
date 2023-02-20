@@ -3,7 +3,7 @@
 public class CatCommandRepresentation : ITerminalCommandRepresentation
 {
     public string Name => "cat";
-    
+
     public bool CanBeParsed(IEnumerable<string> tokens)
     {
         return tokens.First() == Name;

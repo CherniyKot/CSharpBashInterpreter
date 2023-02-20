@@ -46,7 +46,7 @@ internal class CatCommandExecutable : BaseCommandExecutable
                 await ErrorStream.FlushAsync();
             }
         }
-        
+
         await OutputStream.DisposeAsync();
     }
 }
