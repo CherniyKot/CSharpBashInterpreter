@@ -1,6 +1,6 @@
 ﻿namespace CSharpBashInterpreter.Semantics;
 
-class SpaceTokenParser : ITokenParser
+class SpaceTokenizer : ITokenizer
 {
     public string[] Tokenize(string input) => input.Split().ToArray();
 }

@@ -1,6 +1,6 @@
 ﻿namespace CSharpBashInterpreter.Semantics;
 
-public interface ITokenParser
+public interface ITokenizer
 {
     string[] Tokenize(string input);
 }
