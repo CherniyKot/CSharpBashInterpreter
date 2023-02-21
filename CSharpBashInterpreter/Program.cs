@@ -4,27 +4,31 @@ using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Commands.Meta.Utility;
 using CSharpBashInterpreter.Semantics;
 
-Console.CancelKeyPress += (_, eventArgs) =>
-{
-    eventArgs.Cancel = true;
-    InterruptableConsoleStream.Interrupt();
-};
-
 var context = new DefaultContext();
-var tokenParser = new SpaceTokenParser();
-var commandsParser = new DefaultCommandsParser
+var tokenizer = new SpaceTokenizer();
+var commandsParser = new DefaultCommandsParser(tokenizer)
 {
-    Commands = new ICommandRepresentation[]{ new CatCommandRepresentation() },
+    Commands = new ICommandRepresentation[]{ new CatCommandRepresentation(), new LsCommandRepresentation() },
     MetaCommands = new IMetaCommandRepresentation[]{ new PipeCommandRepresentation() }
 };
 
-while (true)
+var tokenSource = new CancellationTokenSource();
+Console.CancelKeyPress += (_, eventArgs) =>
+{
+    eventArgs.Cancel = true;
+    tokenSource.Cancel();
+    InterruptableConsoleStream.Interrupt();
+};
+
+var token = tokenSource.Token;
+while (token.IsCancellationRequested)
 {
     try
     {
         var line = Console.ReadLine() ?? "";
-        var tokens = tokenParser.Tokenize(line);
-        var command = commandsParser.Parse(tokens, context);
+        if (string.IsNullOrWhiteSpace(line))
+            continue;
+        var command = commandsParser.Parse(line, context);
         await command.Execute();
     }
     catch (Exception e)
