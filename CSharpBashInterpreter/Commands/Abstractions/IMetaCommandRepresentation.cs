@@ -2,7 +2,7 @@
 
 namespace CSharpBashInterpreter.Commands.Abstractions;
 
-public interface IMetaCommandRepresentation : IAbstractCommandRepresentation
+public interface IMetaCommandRepresentation : IAbstractCommandRepresentation<string>
 {
-    BaseCommandExecutable Build(IEnumerable<string> tokens, IContext context, ICommandParser parser);
+    ICommandExecutable Build(string input, IContext context, ICommandParser parser);
 }

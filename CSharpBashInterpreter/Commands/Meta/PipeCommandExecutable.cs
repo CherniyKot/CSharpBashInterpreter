@@ -1,30 +1,30 @@
 ﻿using System.IO.Pipelines;
+using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
 public class PipeCommandExecutable : BaseCommandExecutable
 {
-    private readonly BaseCommandExecutable _left;
-    private readonly BaseCommandExecutable _right;
-    private readonly Pipe _pipe;
+    private readonly ICommandExecutable[] _commands;
 
-    public PipeCommandExecutable(IEnumerable<string> tokens, string delimiter, IContext context, ICommandParser parser)
-        : base(tokens)
+    public PipeCommandExecutable(string input, string delimiter, IContext context, ICommandParser parser)
+        : base(input.Split(delimiter, StringSplitOptions.TrimEntries))
     {
-        _left = parser.Parse(Tokens.TakeWhile(t => t != delimiter), context);
-        _right = parser.Parse(Tokens.SkipWhile(t => t != delimiter).Skip(1), context);
-
-        _pipe = new Pipe();
-        _left.OutputStream = new StreamWriter(_pipe.Writer.AsStream());
-        _right.InputStream = new StreamReader(_pipe.Reader.AsStream());
+        _commands = Tokens.Select(x => parser.Parse(x, context)).ToArray();
     }
 
     public override async Task Execute()
     {
-        var leftTask = _left.Execute();
-        var rightTask = _right.Execute();
+        _commands.First().InputStream = InputStream;
+        _commands.Last().OutputStream = OutputStream;
 
-        await Task.WhenAll(leftTask, rightTask);
+        for (var i = 0; i < Tokens.Length - 1; i++)
+        {
+            var pipe = new Pipe();
+            _commands[i].OutputStream = new StreamWriter(pipe.Writer.AsStream());
+            _commands[i + 1].InputStream = new StreamReader(pipe.Reader.AsStream());
+        }
+        await Task.WhenAll(_commands.Select(x => x.Execute()));
     }
 }

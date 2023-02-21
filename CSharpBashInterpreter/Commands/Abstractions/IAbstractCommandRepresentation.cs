@@ -1,6 +1,6 @@
 ﻿namespace CSharpBashInterpreter.Commands.Abstractions;
 
-public interface IAbstractCommandRepresentation
+public interface IAbstractCommandRepresentation<in TInput>
 {
-    bool CanBeParsed(IEnumerable<string> tokens);
+    bool CanBeParsed(TInput data);
 }

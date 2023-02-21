@@ -13,13 +13,18 @@ public class PipeCommandRepresentation : IMetaCommandRepresentation
             _delimiter = delimiter;
     }
 
-    public bool CanBeParsed(IEnumerable<string> tokens)
+    public bool CanBeParsed(string data)
     {
-        return tokens.Contains(_delimiter);
+        return data.Contains(_delimiter);
     }
 
-    public BaseCommandExecutable Build(IEnumerable<string> tokens, IContext context, ICommandParser parser)
+    public IEnumerable<string> Process(string input, IContext context, ICommandParser parser)
     {
-        return new PipeCommandExecutable(tokens, _delimiter, context, parser);
+        throw new NotImplementedException();
+    }
+
+    public ICommandExecutable Build(string input, IContext context, ICommandParser parser)
+    {
+        return new PipeCommandExecutable(input, _delimiter, context, parser);
     }
 }

@@ -1,8 +1,8 @@
-﻿using CSharpBashInterpreter.Commands;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
 
 namespace CSharpBashInterpreter.Semantics;
 
 public interface ICommandParser
 {
-    BaseCommandExecutable Parse(IEnumerable<string> tokens, IContext context);
+    ICommandExecutable Parse(string input, IContext context);
 }

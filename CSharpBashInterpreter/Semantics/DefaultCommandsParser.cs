@@ -4,18 +4,27 @@ using CSharpBashInterpreter.Exceptions;
 
 namespace CSharpBashInterpreter.Semantics;
 
-public class DefaultCommandsParser : ICommandParser
+public sealed class DefaultCommandsParser : ICommandParser
 {
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
     public required ICommandRepresentation[] Commands { get; init; }
 
-    public virtual BaseCommandExecutable Parse(IEnumerable<string> tokens, IContext context)
-    {
-        foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(tokens)))
-            return metaCommand.Build(tokens, context, this);
+    private readonly ITokenizer _tokenizer;
 
-        foreach (var metaCommand in Commands.Where(x => x.CanBeParsed(tokens)))
-            return metaCommand.Build(tokens);
+    public DefaultCommandsParser(ITokenizer tokenizer)
+    {
+        _tokenizer = tokenizer;
+    }
+
+    public ICommandExecutable Parse(string input, IContext context)
+    {
+        foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(input)))
+            return metaCommand.Build(input, context, this);
+
+        var tokens = _tokenizer.Tokenize(input);
+
+        foreach (var command in Commands.Where(x => x.CanBeParsed(tokens)))
+            return command.Build(tokens);
 
         var other = ProcessOtherCommand(tokens);
         if (other is not null)
@@ -24,5 +33,5 @@ public class DefaultCommandsParser : ICommandParser
         throw new ParseException(tokens);
     }
 
-    protected virtual BaseCommandExecutable? ProcessOtherCommand(IEnumerable<string> tokens) => null;
+    private BaseCommandExecutable? ProcessOtherCommand(IEnumerable<string> tokens) => null;
 }
