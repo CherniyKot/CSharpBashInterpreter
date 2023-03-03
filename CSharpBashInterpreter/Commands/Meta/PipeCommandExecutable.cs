@@ -14,7 +14,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
         _commands = Tokens.Select(x => parser.Parse(x, context)).ToArray();
     }
 
-    public override async Task Execute()
+    public override async Task<int> Execute()
     {
         _commands.First().InputStream = InputStream;
         _commands.Last().OutputStream = OutputStream;
@@ -26,5 +26,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
             _commands[i + 1].InputStream = new StreamReader(pipe.Reader.AsStream());
         }
         await Task.WhenAll(_commands.Select(x => x.Execute()));
+
+        return 0;
     }
 }

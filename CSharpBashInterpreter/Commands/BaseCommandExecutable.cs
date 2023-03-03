@@ -16,5 +16,5 @@ public abstract class BaseCommandExecutable : ICommandExecutable
         Tokens = tokens.ToArray();
     }
 
-    public abstract Task Execute();
+    public abstract Task<int> Execute();
 }

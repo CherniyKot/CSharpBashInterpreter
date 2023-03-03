@@ -21,7 +21,7 @@ Console.CancelKeyPress += (_, eventArgs) =>
 };
 
 var token = tokenSource.Token;
-while (token.IsCancellationRequested)
+while (!token.IsCancellationRequested)
 {
     try
     {
@@ -29,7 +29,9 @@ while (token.IsCancellationRequested)
         if (string.IsNullOrWhiteSpace(line))
             continue;
         var command = commandsParser.Parse(line, context);
-        await command.Execute();
+        var result = await command.Execute();
+        if (result != 0)
+            Console.WriteLine($"Команда завершилась с кодом ошибки {result}.");
     }
     catch (Exception e)
     {

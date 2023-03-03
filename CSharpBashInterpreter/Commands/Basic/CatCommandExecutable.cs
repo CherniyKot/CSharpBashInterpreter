@@ -8,7 +8,7 @@ internal class CatCommandExecutable : BaseCommandExecutable
     public CatCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task Execute()
+    public override async Task<int> Execute()
     {
         var args = Tokens.Skip(1);
         if (args.Any())
@@ -29,6 +29,7 @@ internal class CatCommandExecutable : BaseCommandExecutable
                 {
                     await ErrorStream.WriteLineAsync(e.Message);
                     await ErrorStream.FlushAsync();
+                    return 1;
                 }
             }
         }
@@ -47,9 +48,11 @@ internal class CatCommandExecutable : BaseCommandExecutable
             {
                 await ErrorStream.WriteLineAsync(e.Message);
                 await ErrorStream.FlushAsync();
+                return 1;
             }
         }
 
         await OutputStream.DisposeAsync();
+        return 0;
     }
 }

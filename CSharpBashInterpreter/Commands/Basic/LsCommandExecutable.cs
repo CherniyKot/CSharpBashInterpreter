@@ -5,7 +5,7 @@ public class LsCommandExecutable : BaseCommandExecutable
     public LsCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task Execute()
+    public override async Task<int> Execute()
     {
         var files = Directory.GetFiles(Directory.GetCurrentDirectory());
         foreach (var file in files)
@@ -13,5 +13,7 @@ public class LsCommandExecutable : BaseCommandExecutable
             await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
             await OutputStream.FlushAsync();
         }
+
+        return 0;
     }
 }

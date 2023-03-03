@@ -6,5 +6,5 @@ public interface ICommandExecutable
     StreamWriter OutputStream { get; set; }
     StreamWriter ErrorStream { get; set; }
 
-    Task Execute();
+    Task<int> Execute();
 }
