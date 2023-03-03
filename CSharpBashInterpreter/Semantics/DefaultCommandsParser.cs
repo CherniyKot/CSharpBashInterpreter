@@ -9,19 +9,11 @@ public sealed class DefaultCommandsParser : ICommandParser
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
     public required ICommandRepresentation[] Commands { get; init; }
 
-    private readonly ITokenizer _tokenizer;
 
-    public DefaultCommandsParser(ITokenizer tokenizer)
+    public ICommandExecutable Parse(string[] tokens, IContext context)
     {
-        _tokenizer = tokenizer;
-    }
-
-    public ICommandExecutable Parse(string input, IContext context)
-    {
-        foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(input)))
-            return metaCommand.Build(input, context, this);
-
-        var tokens = _tokenizer.Tokenize(input);
+        foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(tokens)))
+            return metaCommand.Build(tokens, context, this);
 
         foreach (var command in Commands.Where(x => x.CanBeParsed(tokens)))
             return command.Build(tokens);

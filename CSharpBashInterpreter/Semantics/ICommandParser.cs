@@ -4,5 +4,5 @@ namespace CSharpBashInterpreter.Semantics;
 
 public interface ICommandParser
 {
-    ICommandExecutable Parse(string input, IContext context);
+    ICommandExecutable Parse(string[] input, IContext context);
 }
