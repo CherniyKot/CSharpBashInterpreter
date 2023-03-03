@@ -9,7 +9,7 @@ var tokenizer = new SpaceTokenizer();
 var commandsParser = new DefaultCommandsParser(tokenizer)
 {
     Commands = new ICommandRepresentation[]{ new CatCommandRepresentation(), new LsCommandRepresentation() },
-    MetaCommands = new IMetaCommandRepresentation[]{ new PipeCommandRepresentation() }
+    MetaCommands = new IMetaCommandRepresentation[]{ }
 };
 
 var tokenSource = new CancellationTokenSource();
