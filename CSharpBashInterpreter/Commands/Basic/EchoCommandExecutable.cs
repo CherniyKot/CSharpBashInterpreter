@@ -22,6 +22,7 @@ internal class EchoCommandExecutable : BaseCommandExecutable
             {
                 await OutputStream.WriteLineAsync(e.Message);
                 await OutputStream.FlushAsync();
+                return 1;
             }
         }
 
