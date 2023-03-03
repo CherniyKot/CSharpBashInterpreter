@@ -2,6 +2,10 @@
 
 namespace CSharpBashInterpreter.Semantics;
 
+/// <summary>
+/// Implementation of <see cref="ITokenizer"/>, who emulating
+/// equal logic of parsing like bash
+/// </summary>
 public partial class SpaceTokenizer : ITokenizer
 {
     public string[] Tokenize(string input) => QuoteRegexParser()

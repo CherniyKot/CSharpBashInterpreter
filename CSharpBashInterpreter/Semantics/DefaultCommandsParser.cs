@@ -4,9 +4,18 @@ using CSharpBashInterpreter.Exceptions;
 
 namespace CSharpBashInterpreter.Semantics;
 
+/// <summary>
+/// Provide extendable parser with other predefined commands
+/// </summary>
 public class DefaultCommandsParser : ICommandParser
 {
+    /// <summary>
+    /// Commands for additional processing input tokens
+    /// </summary>
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
+    /// <summary>
+    /// Basic commands for executing
+    /// </summary>
     public required ICommandRepresentation[] Commands { get; init; }
 
 
