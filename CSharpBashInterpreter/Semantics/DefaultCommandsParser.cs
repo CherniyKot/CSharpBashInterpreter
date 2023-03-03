@@ -4,7 +4,7 @@ using CSharpBashInterpreter.Exceptions;
 
 namespace CSharpBashInterpreter.Semantics;
 
-public sealed class DefaultCommandsParser : ICommandParser
+public class DefaultCommandsParser : ICommandParser
 {
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
     public required ICommandRepresentation[] Commands { get; init; }
@@ -25,5 +25,5 @@ public sealed class DefaultCommandsParser : ICommandParser
         throw new ParseException(tokens);
     }
 
-    private BaseCommandExecutable? ProcessOtherCommand(IEnumerable<string> tokens) => null;
+    protected virtual BaseCommandExecutable? ProcessOtherCommand(IEnumerable<string> tokens) => null;
 }

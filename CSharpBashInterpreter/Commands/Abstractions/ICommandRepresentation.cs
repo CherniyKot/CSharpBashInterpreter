@@ -3,5 +3,5 @@
 public interface ICommandRepresentation : IAbstractCommandRepresentation<IEnumerable<string>>
 {
     public string Name { get; }
-    BaseCommandExecutable Build(IEnumerable<string> tokens);
+    ICommandExecutable Build(IEnumerable<string> tokens);
 }
