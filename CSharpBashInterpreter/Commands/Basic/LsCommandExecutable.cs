@@ -7,13 +7,23 @@ public class LsCommandExecutable : BaseCommandExecutable
 
     public override async Task<int> Execute()
     {
-        var files = Directory.GetFiles(Directory.GetCurrentDirectory());
-        foreach (var file in files)
+        try
         {
-            await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
-            await OutputStream.FlushAsync();
+            var files = Directory.GetFiles(Directory.GetCurrentDirectory());
+            foreach (var file in files)
+            {
+                await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
+                await OutputStream.FlushAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            await ErrorStream.WriteLineAsync(e.Message);
+            await ErrorStream.FlushAsync();
+            return 1;
         }
 
+        await OutputStream.DisposeAsync();
         return 0;
     }
 }
