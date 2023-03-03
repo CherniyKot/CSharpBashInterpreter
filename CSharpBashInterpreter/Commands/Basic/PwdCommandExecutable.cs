@@ -7,7 +7,6 @@ public class PwdCommandExecutable : BaseCommandExecutable
 
     public override async Task<int> Execute()
     {
-        var args = Tokens.Skip(1);
         try
         {
             await ErrorStream.WriteLineAsync(Directory.GetCurrentDirectory());
