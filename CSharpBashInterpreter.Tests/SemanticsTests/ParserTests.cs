@@ -16,8 +16,7 @@ public class ParserTests
         var parser = new DefaultCommandsParser
         {
             MetaCommands = Array.Empty<IMetaCommandRepresentation>(),
-            Commands = Array.Empty<ICommandRepresentation>(),
-            ExternalCommandRepresentation = new ExternalCommandRepresentation()
+            Commands = Array.Empty<ICommandRepresentation>()
         };
 
         var tokens = new[] { "" };
@@ -35,8 +34,7 @@ public class ParserTests
             Commands = new ICommandRepresentation[]
             {
                 new CatCommandRepresentation()
-            },
-            ExternalCommandRepresentation = new ExternalCommandRepresentation()
+            }
         };
 
         var file = Path.GetTempFileName();
