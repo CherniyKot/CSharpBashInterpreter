@@ -9,7 +9,11 @@ var context = new DefaultContext();
 var tokenizer = new SpaceTokenizer();
 var commandsParser = new DefaultCommandsParser()
 {
-    Commands = new ICommandRepresentation[]{ new CatCommandRepresentation(), new LsCommandRepresentation() },
+    Commands = new ICommandRepresentation[]{ 
+        new CatCommandRepresentation(),
+        new LsCommandRepresentation(),
+        new PwdCommandRepresentation()
+    },
     MetaCommands = new IMetaCommandRepresentation[]{ },
     ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
