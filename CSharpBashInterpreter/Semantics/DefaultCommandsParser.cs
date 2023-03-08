@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using CSharpBashInterpreter.Commands;
-using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Exceptions;
 
 namespace CSharpBashInterpreter.Semantics;
@@ -19,7 +17,7 @@ public class DefaultCommandsParser : ICommandParser
     /// Basic commands for executing
     /// </summary>
     public required ICommandRepresentation[] Commands { get; init; }
-    
+
     /// <summary>
     /// Command for OS process calls
     /// </summary>
@@ -34,11 +32,9 @@ public class DefaultCommandsParser : ICommandParser
         foreach (var command in Commands.Where(x => x.CanBeParsed(tokens)))
             return command.Build(tokens);
 
-        if (ExternalCommandRepresentation is null)
-        {
-            throw new ParseException(tokens);
-        }
+        if (ExternalCommandRepresentation is not null)
+            return ExternalCommandRepresentation.Build(tokens);
 
-        return ExternalCommandRepresentation.Build(tokens);
+        throw new ParseException(tokens);
     }
 }
