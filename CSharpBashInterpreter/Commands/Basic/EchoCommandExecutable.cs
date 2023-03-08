@@ -1,5 +1,12 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
+
+/// <summary>
+/// Executable for bash echo command
+/// Takes list of 2 tokens: "echo" and string
+/// sends string to the output stream
+/// </summary>
+
 internal class EchoCommandExecutable : BaseCommandExecutable
 {
     private const int BufferSize = 256;

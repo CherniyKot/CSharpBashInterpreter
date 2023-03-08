@@ -1,5 +1,9 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Representation for bash echo command
+/// </summary>
+
 class EchoCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "echo";
