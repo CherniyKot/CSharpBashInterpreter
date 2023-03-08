@@ -1,5 +1,10 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Executable for bash ls command
+/// Does not take arguments
+/// Consumes names of files in current directory
+/// </summary>
 public class LsCommandExecutable : BaseCommandExecutable
 {
     public LsCommandExecutable(IEnumerable<string> tokens) : base(tokens)
