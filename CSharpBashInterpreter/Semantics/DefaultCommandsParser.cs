@@ -14,11 +14,15 @@ public class DefaultCommandsParser : ICommandParser
     /// Commands for additional processing input tokens
     /// </summary>
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
+
     /// <summary>
     /// Basic commands for executing
     /// </summary>
     public required ICommandRepresentation[] Commands { get; init; }
     
+    /// <summary>
+    /// Command for OS process calls
+    /// </summary>
     public required ICommandRepresentation ExternalCommandRepresentation { get; init; }
 
 

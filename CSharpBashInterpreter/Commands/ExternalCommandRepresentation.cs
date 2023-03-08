@@ -2,6 +2,9 @@
 
 namespace CSharpBashInterpreter.Commands;
 
+/// <summary>
+/// Representation for external commands (calls to OS processes)
+/// </summary>
 public class ExternalCommandRepresentation: ICommandRepresentation
 {
     public string Name => "";
