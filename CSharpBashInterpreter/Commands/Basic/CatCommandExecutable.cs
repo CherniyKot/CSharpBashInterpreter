@@ -1,5 +1,12 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Executable for bash cat command
+/// Takes list of tokens starting with "cat" and processes the rest of them as arguments
+/// Without arguments consumes strings from input stream snd copies them to the output stream
+/// Arguments are interpreted as list of files and "-" strings
+/// Concatenates contents of files (and input stream for "-") and copies result to the output stream
+/// </summary>
 public class CatCommandExecutable : BaseCommandExecutable
 {
     private const int BufferSize = 256;
