@@ -6,7 +6,7 @@ using CSharpBashInterpreter.Semantics;
 
 var context = new DefaultContext();
 var tokenizer = new SpaceTokenizer();
-var commandsParser = new DefaultCommandsParser(tokenizer)
+var commandsParser = new DefaultCommandsParser()
 {
     Commands = new ICommandRepresentation[]{ new CatCommandRepresentation(), new LsCommandRepresentation() },
     MetaCommands = new IMetaCommandRepresentation[]{ }
@@ -26,9 +26,10 @@ while (!token.IsCancellationRequested)
     try
     {
         var line = Console.ReadLine() ?? "";
-        if (string.IsNullOrWhiteSpace(line))
+        var tokens = tokenizer.Tokenize(line);
+        if (tokens.Length == 0)
             continue;
-        var command = commandsParser.Parse(line, context);
+        var command = commandsParser.Parse(tokens, context);
         var result = await command.Execute();
         if (result != 0)
             Console.WriteLine($"Команда завершилась с кодом ошибки {result}.");

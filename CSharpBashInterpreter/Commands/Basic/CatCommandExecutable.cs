@@ -1,6 +1,6 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
-internal class CatCommandExecutable : BaseCommandExecutable
+public class CatCommandExecutable : BaseCommandExecutable
 {
     private const int BufferSize = 256;
     private readonly char[] _buffer = new char[BufferSize];

@@ -2,7 +2,17 @@
 
 namespace CSharpBashInterpreter.Commands.Abstractions;
 
-public interface IMetaCommandRepresentation : IAbstractCommandRepresentation<string>
+/// <summary>
+/// Provide information of meta command, who process input and provide additional logic
+/// </summary>
+public interface IMetaCommandRepresentation : IAbstractCommandRepresentation<IEnumerable<string>>
 {
-    ICommandExecutable Build(string input, IContext context, ICommandParser parser);
+    /// <summary>
+    /// Build combined executable with custom processed string.
+    /// </summary>
+    /// <param name="input">Console input string</param>
+    /// <param name="context">Environment context</param>
+    /// <param name="parser">Parsed for additional command parsing</param>
+    /// <returns></returns>
+    ICommandExecutable Build(string[] input, IContext context, ICommandParser parser);
 }
