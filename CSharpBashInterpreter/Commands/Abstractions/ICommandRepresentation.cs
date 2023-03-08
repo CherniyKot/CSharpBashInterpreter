@@ -6,10 +6,6 @@
 public interface ICommandRepresentation : IAbstractCommandRepresentation<IEnumerable<string>>
 {
     /// <summary>
-    /// Used for call command
-    /// </summary>
-    public string Name { get; }
-    /// <summary>
     /// Build command runtime with applied arguments from tokens
     /// </summary>
     ICommandExecutable Build(IEnumerable<string> tokens);

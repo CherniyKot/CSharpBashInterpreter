@@ -7,12 +7,7 @@ namespace CSharpBashInterpreter.Commands;
 /// </summary>
 public class ExternalCommandRepresentation: ICommandRepresentation
 {
-    public string Name => "";
-
-    public ICommandExecutable Build(IEnumerable<string> tokens)
-    {
-        return new ExternalCommandExecutable(tokens);
-    }
+    public ICommandExecutable Build(IEnumerable<string> tokens) => new ExternalCommandExecutable(tokens);
 
     public bool CanBeParsed(IEnumerable<string> data) => true;
 }
