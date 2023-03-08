@@ -10,19 +10,31 @@ public class CatCommandExecutable : BaseCommandExecutable
 
     public override async Task<int> Execute()
     {
-        var args = Tokens.Skip(1);
+        var args = Tokens.Skip(1).ToList();
         if (args.Any())
         {
             foreach (var fileName in args)
             {
                 try
                 {
-                    using var fileStream = File.OpenText(fileName);
-                    while (!fileStream.EndOfStream)
+                    if (fileName == "-")
                     {
-                        var bytesRead = await fileStream.ReadAsync(_buffer, 0, BufferSize);
-                        await OutputStream.WriteAsync(_buffer, 0, bytesRead);
-                        await OutputStream.FlushAsync();
+                        while (InputStream.BaseStream.CanRead)
+                        {
+                            var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
+                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
+                            await OutputStream.FlushAsync();
+                        }
+                    }
+                    else
+                    {
+                        using var fileStream = File.OpenText(fileName);
+                        while (!fileStream.EndOfStream)
+                        {
+                            var bytesRead = await fileStream.ReadAsync(_buffer, 0, BufferSize);
+                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
+                            await OutputStream.FlushAsync();
+                        }
                     }
                 }
                 catch (Exception e)
