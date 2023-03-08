@@ -2,6 +2,9 @@
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Representation for bash cat command
+/// </summary>
 public class CatCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "cat";

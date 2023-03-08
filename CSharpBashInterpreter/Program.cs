@@ -1,4 +1,5 @@
-﻿using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands;
+using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Commands.Meta.Utility;
@@ -13,7 +14,8 @@ var commandsParser = new DefaultCommandsParser()
         new LsCommandRepresentation(),
         new PwdCommandRepresentation()
     },
-    MetaCommands = new IMetaCommandRepresentation[]{ }
+    MetaCommands = new IMetaCommandRepresentation[]{ },
+    ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
 
 var tokenSource = new CancellationTokenSource();

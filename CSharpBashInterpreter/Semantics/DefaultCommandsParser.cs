@@ -1,5 +1,4 @@
-﻿using CSharpBashInterpreter.Commands;
-using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Exceptions;
 
 namespace CSharpBashInterpreter.Semantics;
@@ -13,10 +12,16 @@ public class DefaultCommandsParser : ICommandParser
     /// Commands for additional processing input tokens
     /// </summary>
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
+
     /// <summary>
     /// Basic commands for executing
     /// </summary>
     public required ICommandRepresentation[] Commands { get; init; }
+
+    /// <summary>
+    /// Command for OS process calls
+    /// </summary>
+    public ICommandRepresentation? ExternalCommandRepresentation { get; init; }
 
 
     public ICommandExecutable Parse(string[] tokens, IContext context)
@@ -27,12 +32,9 @@ public class DefaultCommandsParser : ICommandParser
         foreach (var command in Commands.Where(x => x.CanBeParsed(tokens)))
             return command.Build(tokens);
 
-        var other = ProcessOtherCommand(tokens);
-        if (other is not null)
-            return other;
+        if (ExternalCommandRepresentation is not null)
+            return ExternalCommandRepresentation.Build(tokens);
 
         throw new ParseException(tokens);
     }
-
-    protected virtual BaseCommandExecutable? ProcessOtherCommand(IEnumerable<string> tokens) => null;
 }
