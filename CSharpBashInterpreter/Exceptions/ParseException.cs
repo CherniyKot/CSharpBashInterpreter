@@ -1,6 +1,6 @@
 ﻿namespace CSharpBashInterpreter.Exceptions;
 
-internal class ParseException : Exception
+public class ParseException : Exception
 {
     public string Tokens;
 
