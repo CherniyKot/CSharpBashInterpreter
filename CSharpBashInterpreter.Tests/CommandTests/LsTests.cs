@@ -39,7 +39,7 @@ namespace CSharpBashInterpreter.Tests.CommandTests
             }
             finally
             {
-                
+
             }
         }
     }
