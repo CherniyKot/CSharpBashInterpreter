@@ -2,8 +2,10 @@
 
 /// <summary>
 /// Executable for bash ls command
-/// Does not take arguments
-/// Consumes names of files in current directory
+/// Takes a list of tokens starting with "ls"
+/// Second token is path
+/// If second token does not exist path is current path
+/// Consumes names of files in path
 /// </summary>
 public class LsCommandExecutable : BaseCommandExecutable
 {
@@ -12,9 +14,11 @@ public class LsCommandExecutable : BaseCommandExecutable
 
     public override async Task<int> Execute()
     {
+        var args = Tokens.Skip(1);
         try
         {
-            var files = Directory.GetFiles(Directory.GetCurrentDirectory());
+            string path = args.Count() > 0 ? args.First() : Directory.GetCurrentDirectory();
+            var files = Directory.GetFiles(path);
             foreach (var file in files)
             {
                 await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
