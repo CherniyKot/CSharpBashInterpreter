@@ -2,6 +2,9 @@
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Executable for exit command
+/// </summary>
 public class ExitCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "exit";
