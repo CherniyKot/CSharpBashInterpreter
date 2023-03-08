@@ -1,4 +1,5 @@
-﻿using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands;
+using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Commands.Meta.Utility;
@@ -9,7 +10,8 @@ var tokenizer = new SpaceTokenizer();
 var commandsParser = new DefaultCommandsParser()
 {
     Commands = new ICommandRepresentation[]{ new CatCommandRepresentation(), new LsCommandRepresentation() },
-    MetaCommands = new IMetaCommandRepresentation[]{ }
+    MetaCommands = new IMetaCommandRepresentation[]{ },
+    ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
 
 var tokenSource = new CancellationTokenSource();

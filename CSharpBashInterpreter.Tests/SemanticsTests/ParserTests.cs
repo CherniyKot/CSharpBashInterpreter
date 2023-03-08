@@ -1,4 +1,5 @@
-﻿using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands;
+using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Exceptions;
 using CSharpBashInterpreter.Semantics;
@@ -15,7 +16,8 @@ public class ParserTests
         var parser = new DefaultCommandsParser
         {
             MetaCommands = Array.Empty<IMetaCommandRepresentation>(),
-            Commands = Array.Empty<ICommandRepresentation>()
+            Commands = Array.Empty<ICommandRepresentation>(),
+            ExternalCommandRepresentation = new ExternalCommandRepresentation()
         };
 
         var tokens = new[] { "" };
@@ -33,7 +35,8 @@ public class ParserTests
             Commands = new ICommandRepresentation[]
             {
                 new CatCommandRepresentation()
-            }
+            },
+            ExternalCommandRepresentation = new ExternalCommandRepresentation()
         };
 
         var file = Path.GetTempFileName();
