@@ -2,10 +2,8 @@
 
 /// <summary>
 /// Executable for bash ls command
-/// Takes a list of tokens starting with "ls"
-/// Second token is path
-/// If second token does not exist path is current path
-/// Consumes names of files in path
+/// Takes a list of tokens {"ls", directory} -> Consumes names of files in directory
+/// Or takes a list of tokens {"ls"} -> Consumes names of files in current directory
 /// </summary>
 public class LsCommandExecutable : BaseCommandExecutable
 {
@@ -21,7 +19,7 @@ public class LsCommandExecutable : BaseCommandExecutable
             var files = Directory.GetFiles(path);
             foreach (var file in files)
             {
-                await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
+                await OutputStream.WriteLineAsync(Path.GetFileName(file) + '\n');
                 await OutputStream.FlushAsync();
             }
         }

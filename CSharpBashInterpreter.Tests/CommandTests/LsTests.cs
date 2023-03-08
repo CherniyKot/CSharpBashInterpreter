@@ -17,10 +17,10 @@ namespace CSharpBashInterpreter.Tests.CommandTests
         [Fact]
         public void TestLs()
         {
-            var tempFileName = System.IO.Directory.GetCurrentDirectory();
+            var curDir = System.IO.Directory.GetCurrentDirectory();
             var testText = "";
 
-            foreach (var file in Directory.GetFiles(tempFileName))
+            foreach (var file in Directory.GetFiles(curDir))
             {
                 testText += Path.GetFileName(file) + '\n';
             }
@@ -39,15 +39,15 @@ namespace CSharpBashInterpreter.Tests.CommandTests
         [Fact]
         public void TestLsWithDir()
         {
-            var tempFileName = System.IO.Directory.GetCurrentDirectory();
+            var curDir = System.IO.Directory.GetCurrentDirectory();
             var testText = "";
 
-            foreach (var file in Directory.GetFiles(tempFileName))
+            foreach (var file in Directory.GetFiles(curDir))
             {
                 testText += Path.GetFileName(file) + '\n';
             }
 
-            var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName });
+            var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", curDir });
             var pipe = new Pipe();
             using (var writer = new StreamWriter(pipe.Writer.AsStream()))
             using (var reader = new StreamReader(pipe.Reader.AsStream()))
