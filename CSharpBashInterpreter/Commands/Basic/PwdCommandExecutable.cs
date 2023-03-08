@@ -1,5 +1,11 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Executable for bash pwd command
+/// Takes list of 1 token "pwd"
+/// Returns current directory
+/// </summary>
+/// 
 public class PwdCommandExecutable : BaseCommandExecutable
 {
     public PwdCommandExecutable(IEnumerable<string> tokens) : base(tokens)
@@ -9,8 +15,8 @@ public class PwdCommandExecutable : BaseCommandExecutable
     {
         try
         {
-            await ErrorStream.WriteLineAsync(Directory.GetCurrentDirectory());
-            await ErrorStream.FlushAsync();
+            await OutputStream.WriteLineAsync(Directory.GetCurrentDirectory());
+            await OutputStream.FlushAsync();
         }
         catch (Exception e)
         {
