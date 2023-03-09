@@ -8,9 +8,6 @@
 /// </summary>
 public class EchoCommandExecutable : BaseCommandExecutable
 {
-    private const int BufferSize = 256;
-    private readonly char[] _buffer = new char[BufferSize];
-
     public EchoCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
