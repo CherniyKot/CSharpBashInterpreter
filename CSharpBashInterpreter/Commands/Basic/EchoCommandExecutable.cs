@@ -18,11 +18,9 @@ public class EchoCommandExecutable : BaseCommandExecutable
     {
         try
         {
-            foreach (var arg in Tokens.Skip(1))
-            {
-                await OutputStream.WriteLineAsync(arg);
-                await OutputStream.FlushAsync();
-            }
+            var concatArgs = string.Join(' ', Tokens.Skip(1));
+            await OutputStream.WriteAsync(concatArgs);
+            await OutputStream.FlushAsync();
         }
         catch (Exception e)
         {
