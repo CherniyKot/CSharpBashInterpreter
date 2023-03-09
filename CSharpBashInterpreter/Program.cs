@@ -13,6 +13,7 @@ var commandsParser = new DefaultCommandsParser()
         new LsCommandRepresentation(),
         new EchoCommandRepresentation(),
         new PwdCommandRepresentation(),
+        new WcCommandRepresentation(),
         new ExitCommandRepresentation()
     },
     MetaCommands = new IMetaCommandRepresentation[]{ },
