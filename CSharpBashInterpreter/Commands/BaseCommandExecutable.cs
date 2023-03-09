@@ -19,5 +19,22 @@ public abstract class BaseCommandExecutable : ICommandExecutable
         Tokens = tokens.ToArray();
     }
 
-    public abstract Task<int> Execute();
+    public async Task<int> ExecuteAsync()
+    {
+        var result = await ExecuteInternalAsync();
+        OutputStream.Close();
+        InputStream.Close();
+        ErrorStream.Close();
+        return result;
+    }
+
+    protected abstract Task<int> ExecuteInternalAsync();
+
+    public async ValueTask DisposeAsync()
+    {
+        InputStream.Dispose();
+        await OutputStream.DisposeAsync();
+        await ErrorStream.DisposeAsync();
+        GC.SuppressFinalize(this);
+    }
 }

@@ -12,12 +12,12 @@ public class LsCommandExecutable : BaseCommandExecutable
     public LsCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1);
         try
         {
-            string path = args.Count() > 0 ? args.First() : Directory.GetCurrentDirectory();
+            var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
             var files = Directory.GetFiles(path);
             foreach (var file in files)
             {
@@ -31,8 +31,6 @@ public class LsCommandExecutable : BaseCommandExecutable
             await ErrorStream.FlushAsync();
             return 1;
         }
-
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }

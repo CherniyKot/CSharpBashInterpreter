@@ -17,7 +17,7 @@ public class EchoTests
         using (var reader = new StreamReader(pipe.Reader.AsStream()))
         {
             echoCommandExecutable.OutputStream = writer;
-            echoCommandExecutable.Execute().Result.Should().Be(0);
+            echoCommandExecutable.ExecuteAsync().Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Trim().Should().Be(testText);
         }
     }

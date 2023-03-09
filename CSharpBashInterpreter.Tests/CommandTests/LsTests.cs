@@ -23,7 +23,7 @@ namespace CSharpBashInterpreter.Tests.CommandTests
             using (var reader = new StreamReader(pipe.Reader.AsStream()))
             {
                 lsCommandExecutable.OutputStream = writer;
-                lsCommandExecutable.Execute().Result.Should().Be(0);
+                lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
                 reader.ReadToEndAsync().Result.Should().Be(testText);
             }
         }
@@ -45,7 +45,7 @@ namespace CSharpBashInterpreter.Tests.CommandTests
             using (var reader = new StreamReader(pipe.Reader.AsStream()))
             {
                 lsCommandExecutable.OutputStream = writer;
-                lsCommandExecutable.Execute().Result.Should().Be(0);
+                lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
                 reader.ReadToEndAsync().Result.Should().Be(testText);
             }
         }

@@ -11,7 +11,7 @@ public class PwdCommandExecutable : BaseCommandExecutable
     public PwdCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         try
         {
@@ -24,7 +24,6 @@ public class PwdCommandExecutable : BaseCommandExecutable
             await ErrorStream.FlushAsync();
             return 1;
         }
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }
