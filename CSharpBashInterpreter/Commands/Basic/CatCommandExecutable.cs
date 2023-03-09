@@ -15,7 +15,7 @@ public class CatCommandExecutable : BaseCommandExecutable
     public CatCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1).ToList();
         if (args.Any())
@@ -70,8 +70,6 @@ public class CatCommandExecutable : BaseCommandExecutable
                 return 1;
             }
         }
-
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }
