@@ -24,14 +24,14 @@ public class WcCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         if (args.Any())
         {
-            int totalLines = 0;
-            int totalWords = 0;
-            int totalBytes = 0;
+            long totalLines = 0;
+            long totalWords = 0;
+            long totalBytes = 0;
             foreach (var fileName in args)
             {
-                int lines = 0;
-                int words = 0;
-                int bytes = 0;
+                long lines = 0;
+                long words = 0;
+                long bytes = 0;
                 try
                 {
                     using var fileStream = File.OpenText(fileName);
@@ -48,14 +48,13 @@ public class WcCommandExecutable : BaseCommandExecutable
                         {
                             lines++;
                             words += s.Split().Length;
-                            bytes += encoding.GetByteCount(s);
                         }
                     }
 
                     totalLines += lines;
-                    totalBytes += bytes;
+                    totalBytes += new FileInfo(fileName).Length;
                     totalWords += words;
-                    await OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
+                    await OutputStream.WriteLineAsync($"{lines} {words} {new FileInfo(fileName).Length} {fileName}");
                 }
                 catch (Exception e)
                 {
@@ -86,7 +85,7 @@ public class WcCommandExecutable : BaseCommandExecutable
                     {
                         lines++;
                         words += s.Split().Length;
-                        bytes += encoding.GetByteCount(s);
+                        bytes += encoding.GetByteCount(s+ Environment.NewLine);
                     }
                 }
                 await OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
