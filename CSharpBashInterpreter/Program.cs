@@ -1,7 +1,6 @@
 ﻿using CSharpBashInterpreter.Commands;
 using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
-using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Commands.Meta.Utility;
 using CSharpBashInterpreter.Semantics;
 

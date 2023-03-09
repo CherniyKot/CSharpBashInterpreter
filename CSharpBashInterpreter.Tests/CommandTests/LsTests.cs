@@ -1,14 +1,6 @@
 ﻿using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO.Pipelines;
-using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
-using CSharpBashInterpreter.Exceptions;
-using CSharpBashInterpreter.Semantics;
 
 namespace CSharpBashInterpreter.Tests.CommandTests
 {

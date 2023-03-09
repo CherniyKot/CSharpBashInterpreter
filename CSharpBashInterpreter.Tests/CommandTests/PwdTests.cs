@@ -1,8 +1,5 @@
 ﻿using System.IO.Pipelines;
-using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
-using CSharpBashInterpreter.Exceptions;
-using CSharpBashInterpreter.Semantics;
 using FluentAssertions;
 
 namespace CSharpBashInterpreter.Tests.CommandTests

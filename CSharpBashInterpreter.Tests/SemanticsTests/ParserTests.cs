@@ -1,5 +1,4 @@
-﻿using CSharpBashInterpreter.Commands;
-using CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Exceptions;
 using CSharpBashInterpreter.Semantics;
