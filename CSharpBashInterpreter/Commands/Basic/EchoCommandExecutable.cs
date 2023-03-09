@@ -14,7 +14,7 @@ public class EchoCommandExecutable : BaseCommandExecutable
     public EchoCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         try
         {

@@ -13,5 +13,5 @@ public interface ICommandExecutable : IAsyncDisposable
     /// Run command action
     /// </summary>
     /// <returns></returns>
-    Task<int> Execute();
+    Task<int> ExecuteAsync();
 }

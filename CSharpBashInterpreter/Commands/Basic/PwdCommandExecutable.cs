@@ -11,7 +11,7 @@ public class PwdCommandExecutable : BaseCommandExecutable
     public PwdCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         try
         {

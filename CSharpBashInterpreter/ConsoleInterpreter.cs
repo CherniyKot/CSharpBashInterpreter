@@ -44,7 +44,7 @@ public sealed class ConsoleInterpreter
             if (tokens.Length == 0)
                 return;
             await using var command = _commandParser.Parse(tokens, context);
-            var result = await command.Execute();
+            var result = await command.ExecuteAsync();
             if (result != 0)
                 Console.WriteLine($"Команда завершилась с кодом ошибки {result}.");
         }
