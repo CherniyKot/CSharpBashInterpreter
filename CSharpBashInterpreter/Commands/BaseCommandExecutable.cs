@@ -20,4 +20,11 @@ public abstract class BaseCommandExecutable : ICommandExecutable
     }
 
     public abstract Task<int> Execute();
+
+    public virtual async ValueTask DisposeAsync()
+    {
+        InputStream.Dispose();
+        await OutputStream.DisposeAsync();
+        await ErrorStream.DisposeAsync();
+    }
 }

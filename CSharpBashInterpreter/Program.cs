@@ -36,7 +36,7 @@ while (!token.IsCancellationRequested)
         var tokens = tokenizer.Tokenize(line);
         if (tokens.Length == 0)
             continue;
-        var command = commandsParser.Parse(tokens, context);
+        await using var command = commandsParser.Parse(tokens, context);
         var result = await command.Execute();
         if (result != 0)
             Console.WriteLine($"Команда завершилась с кодом ошибки {result}.");

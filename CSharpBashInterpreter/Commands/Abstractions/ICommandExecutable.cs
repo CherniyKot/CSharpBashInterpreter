@@ -3,7 +3,7 @@
 /// <summary>
 /// Command runtime executable with built arguments
 /// </summary>
-public interface ICommandExecutable
+public interface ICommandExecutable : IAsyncDisposable
 {
     StreamReader InputStream { get; set; }
     StreamWriter OutputStream { get; set; }
