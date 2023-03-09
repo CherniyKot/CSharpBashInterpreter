@@ -19,7 +19,7 @@ public class WcCommandExecutable : BaseCommandExecutable
     public WcCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
-    public override async Task<int> Execute()
+    protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1).ToList();
         if (args.Any())
@@ -35,7 +35,7 @@ public class WcCommandExecutable : BaseCommandExecutable
                 try
                 {
                     using var fileStream = File.OpenText(fileName);
-                    
+
                     while (!fileStream.EndOfStream)
                     {
                         var s = await fileStream.ReadLineAsync();
