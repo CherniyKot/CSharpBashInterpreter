@@ -31,30 +31,24 @@ public class WcCommandExecutable : BaseCommandExecutable
             {
                 long lines = 0;
                 long words = 0;
-                long bytes = 0;
+                long bytes = new FileInfo(fileName).Length;
                 try
                 {
                     using var fileStream = File.OpenText(fileName);
-                    var encoding = fileStream.CurrentEncoding;
+                    
                     while (!fileStream.EndOfStream)
                     {
-                        // bytes+= await fileStream.ReadAsync(_buffer, 0, BufferSize);
-                        // var s = new string(_buffer);
-                        // words += s.Split().Length-1;
-                        // lines+=s.c
-                        // mne vlom
                         var s = await fileStream.ReadLineAsync();
-                        if (!string.IsNullOrEmpty(s))
-                        {
-                            lines++;
-                            words += s.Split().Length;
-                        }
+                        if (string.IsNullOrEmpty(s)) continue;
+
+                        lines++;
+                        words += s.Split().Length;
                     }
 
                     totalLines += lines;
-                    totalBytes += new FileInfo(fileName).Length;
+                    totalBytes += bytes;
                     totalWords += words;
-                    await OutputStream.WriteLineAsync($"{lines} {words} {new FileInfo(fileName).Length} {fileName}");
+                    await OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
                 }
                 catch (Exception e)
                 {
@@ -81,12 +75,11 @@ public class WcCommandExecutable : BaseCommandExecutable
                 while (InputStream.BaseStream.CanRead)
                 {
                     var s = await InputStream.ReadLineAsync();
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        lines++;
-                        words += s.Split().Length;
-                        bytes += encoding.GetByteCount(s+ Environment.NewLine);
-                    }
+                    if (string.IsNullOrEmpty(s)) continue;
+
+                    lines++;
+                    words += s.Split().Length;
+                    bytes += encoding.GetByteCount(s+ Environment.NewLine);
                 }
                 await OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
             }
