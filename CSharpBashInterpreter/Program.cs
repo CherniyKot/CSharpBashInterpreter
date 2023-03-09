@@ -8,14 +8,15 @@ var context = new DefaultContext();
 var tokenizer = new SpaceTokenizer();
 var commandsParser = new DefaultCommandsParser()
 {
-    Commands = new ICommandRepresentation[]{ 
+    Commands = new ICommandRepresentation[]
+    {
         new CatCommandRepresentation(),
         new LsCommandRepresentation(),
         new EchoCommandRepresentation(),
         new PwdCommandRepresentation(),
         new ExitCommandRepresentation()
     },
-    MetaCommands = new IMetaCommandRepresentation[]{ },
+    MetaCommands = new IMetaCommandRepresentation[] { },
     ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
 
@@ -26,6 +27,7 @@ Console.CancelKeyPress += (_, eventArgs) =>
     tokenSource.Cancel();
     InterruptableConsoleStream.Interrupt();
 };
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var token = tokenSource.Token;
 while (!token.IsCancellationRequested)
