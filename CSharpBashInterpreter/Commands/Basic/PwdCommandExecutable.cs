@@ -24,7 +24,6 @@ public class PwdCommandExecutable : BaseCommandExecutable
             await ErrorStream.FlushAsync();
             return 1;
         }
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }

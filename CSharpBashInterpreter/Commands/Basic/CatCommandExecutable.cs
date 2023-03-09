@@ -70,8 +70,6 @@ public class CatCommandExecutable : BaseCommandExecutable
                 return 1;
             }
         }
-
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }

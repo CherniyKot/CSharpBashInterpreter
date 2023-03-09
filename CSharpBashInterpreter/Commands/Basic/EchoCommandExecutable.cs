@@ -19,21 +19,19 @@ public class EchoCommandExecutable : BaseCommandExecutable
     {
         var args = Tokens.Skip(1);
         if (args.Any())
+    {
+        try
         {
-            try
-            {
                 await OutputStream.WriteLineAsync(args.First());
                 await OutputStream.FlushAsync();
             }
-            catch (Exception e)
-            {
-                await ErrorStream.WriteLineAsync(e.Message);
-                await ErrorStream.FlushAsync();
-                return 1;
-            }
+        catch (Exception e)
+        {
+            await ErrorStream.WriteLineAsync(e.Message);
+            await ErrorStream.FlushAsync();
+            return 1;
         }
-
-        await OutputStream.DisposeAsync();
+        }
         return 0;
     }
 }
