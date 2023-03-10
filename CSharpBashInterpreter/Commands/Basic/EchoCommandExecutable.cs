@@ -16,7 +16,7 @@ public class EchoCommandExecutable : BaseCommandExecutable
         try
         {
             var concatArgs = string.Join(' ', Tokens.Skip(1));
-            await OutputStream.WriteAsync(concatArgs);
+            await OutputStream.WriteLineAsync(concatArgs);
             await OutputStream.FlushAsync();
         }
         catch (Exception e)

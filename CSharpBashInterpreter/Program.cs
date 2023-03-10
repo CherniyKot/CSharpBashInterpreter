@@ -23,5 +23,5 @@ var commandsParser = new DefaultCommandsParser()
 var interpreter = new ConsoleInterpreter(tokenizer, commandsParser);
 
 var tokenSource = new CancellationTokenSource();
-await interpreter.Execute(tokenSource);
+await interpreter.Execute(tokenSource.Token);
 

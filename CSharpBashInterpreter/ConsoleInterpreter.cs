@@ -16,23 +16,16 @@ public sealed class ConsoleInterpreter
         Console.OutputEncoding = System.Text.Encoding.UTF8;
     }
 
-    public async Task Execute(CancellationTokenSource source)
+    public async Task Execute(CancellationToken token)
     {
-        ConsoleCancelEventHandler handler = (_, eventArgs) =>
-        {
-            eventArgs.Cancel = true;
-            source.Cancel();
-            InterruptableConsoleStream.Interrupt();
-        };
-        Console.CancelKeyPress += handler;
+        Console.CancelKeyPress += ConsoleCancelEventHandler;
 
-        var token = source.Token;
         var context = new DefaultContext();
 
         while (!token.IsCancellationRequested)
             await ExecuteLoop(context);
 
-        Console.CancelKeyPress -= handler;
+        Console.CancelKeyPress -= ConsoleCancelEventHandler;
     }
 
     private async Task ExecuteLoop(IContext context)
@@ -46,11 +39,24 @@ public sealed class ConsoleInterpreter
             await using var command = _commandParser.Parse(tokens, context);
             var result = await command.ExecuteAsync();
             if (result != 0)
-                Console.WriteLine($"Команда завершилась с кодом ошибки {result}.");
+                PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");
         }
         catch (Exception e)
         {
-            await Console.Error.WriteLineAsync(e.Message);
+            PrintErrorToConsole(e.Message);
         }
+    }
+
+    private static void PrintErrorToConsole(string message)
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.Error.WriteLine(message);
+        Console.ResetColor();
+    }
+
+    private static void ConsoleCancelEventHandler(object? _, ConsoleCancelEventArgs eventArgs)
+    {
+        eventArgs.Cancel = true;
+        InterruptableConsoleStream.Interrupt();
     }
 }
