@@ -1,6 +1,7 @@
-﻿using CSharpBashInterpreter.Utility;
+﻿using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
-namespace CSharpBashInterpreter.Semantics;
+namespace CSharpBashInterpreter.Semantics.Parsing;
 
 /// <summary>
 /// Implementation of <see cref="ITokenizer"/>, who emulating

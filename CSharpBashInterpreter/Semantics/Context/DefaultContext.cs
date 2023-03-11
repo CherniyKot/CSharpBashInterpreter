@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
+using CSharpBashInterpreter.Semantics.Abstractions;
 
-namespace CSharpBashInterpreter.Semantics;
+namespace CSharpBashInterpreter.Semantics.Context;
 
 public class DefaultContext : IContext
 {

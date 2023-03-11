@@ -1,7 +1,8 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Exceptions;
+using CSharpBashInterpreter.Semantics.Abstractions;
 
-namespace CSharpBashInterpreter.Semantics;
+namespace CSharpBashInterpreter.Semantics.Parsing;
 
 /// <summary>
 /// Provide extendable parser with other predefined commands

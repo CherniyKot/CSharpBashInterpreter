@@ -1,4 +1,5 @@
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Semantics.Parsing;
 using FluentAssertions;
 
 namespace CSharpBashInterpreter.Tests.SemanticsTests;

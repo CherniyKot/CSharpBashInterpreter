@@ -3,7 +3,8 @@ using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Commands.External;
 using CSharpBashInterpreter.Commands.Meta;
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Semantics.Context;
+using CSharpBashInterpreter.Semantics.Parsing;
 
 
 var tokenizer = new SpaceTokenizer();

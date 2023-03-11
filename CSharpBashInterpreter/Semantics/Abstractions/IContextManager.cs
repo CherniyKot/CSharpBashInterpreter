@@ -1,4 +1,4 @@
-﻿namespace CSharpBashInterpreter.Semantics;
+﻿namespace CSharpBashInterpreter.Semantics.Abstractions;
 
 public interface IContextManager
 {

@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Semantics.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.External;
 

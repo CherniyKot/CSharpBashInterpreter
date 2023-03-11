@@ -1,4 +1,4 @@
-﻿using CSharpBashInterpreter.Semantics;
+﻿using CSharpBashInterpreter.Semantics.Abstractions;
 using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter;

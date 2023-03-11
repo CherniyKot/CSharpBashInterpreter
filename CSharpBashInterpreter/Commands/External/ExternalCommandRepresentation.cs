@@ -1,5 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Semantics.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.External;
 
