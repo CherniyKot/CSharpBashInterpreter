@@ -21,7 +21,7 @@ public class DefaultCommandsParser : ICommandParser
     /// <summary>
     /// Command for OS process calls
     /// </summary>
-    public ICommandRepresentation? ExternalCommandRepresentation { get; init; }
+    public IExternalCommandRepresentation? ExternalCommandRepresentation { get; init; }
 
 
     public ICommandExecutable Parse(string[] tokens, IContext context)
@@ -33,7 +33,7 @@ public class DefaultCommandsParser : ICommandParser
             return command.Build(tokens);
 
         if (ExternalCommandRepresentation is not null)
-            return ExternalCommandRepresentation.Build(tokens);
+            return ExternalCommandRepresentation.Build(tokens, context);
 
         throw new ParseException(tokens);
     }
