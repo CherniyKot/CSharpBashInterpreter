@@ -3,6 +3,9 @@ using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Semantics.Context;
 
+/// <summary>
+/// Default realization of manager with parsing by Regex
+/// </summary>
 public class DefaultContextManager : IContextManager
 {
     public IContext GenerateContext() => new DefaultContext();

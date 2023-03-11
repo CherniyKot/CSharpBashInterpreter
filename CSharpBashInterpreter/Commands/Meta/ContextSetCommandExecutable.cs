@@ -2,6 +2,9 @@
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
+/// <summary>
+/// Used for substitute environment variable to context
+/// </summary>
 public class ContextSetCommandExecutable : BaseCommandExecutable
 {
     private readonly IContext _context;

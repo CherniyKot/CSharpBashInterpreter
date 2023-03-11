@@ -3,6 +3,9 @@ using CSharpBashInterpreter.Semantics.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
+/// <summary>
+/// Used for provide substitution of input string
+/// </summary>
 public class ContextSetCommandRepresentation : IMetaCommandRepresentation
 {
     public bool CanBeParsed(IEnumerable<string> data)
