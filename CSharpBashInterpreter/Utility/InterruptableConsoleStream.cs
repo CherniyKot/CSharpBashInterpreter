@@ -1,4 +1,4 @@
-﻿namespace CSharpBashInterpreter.Commands.Meta.Utility;
+﻿namespace CSharpBashInterpreter.Utility;
 
 public class InterruptableConsoleStream : Stream
 {

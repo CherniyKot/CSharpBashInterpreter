@@ -1,5 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Commands.Meta.Utility;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands;
 

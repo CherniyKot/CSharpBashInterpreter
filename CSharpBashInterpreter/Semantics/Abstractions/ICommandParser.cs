@@ -1,6 +1,6 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 
-namespace CSharpBashInterpreter.Semantics;
+namespace CSharpBashInterpreter.Semantics.Abstractions;
 
 /// <summary>
 /// Provide logic of parsing tokens to specific commands

@@ -1,7 +1,8 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Exceptions;
+using CSharpBashInterpreter.Semantics.Abstractions;
 
-namespace CSharpBashInterpreter.Semantics;
+namespace CSharpBashInterpreter.Semantics.Parsing;
 
 /// <summary>
 /// Provide extendable parser with other predefined commands
@@ -21,7 +22,7 @@ public class DefaultCommandsParser : ICommandParser
     /// <summary>
     /// Command for OS process calls
     /// </summary>
-    public ICommandRepresentation? ExternalCommandRepresentation { get; init; }
+    public IExternalCommandRepresentation? ExternalCommandRepresentation { get; init; }
 
 
     public ICommandExecutable Parse(string[] tokens, IContext context)
@@ -33,7 +34,7 @@ public class DefaultCommandsParser : ICommandParser
             return command.Build(tokens);
 
         if (ExternalCommandRepresentation is not null)
-            return ExternalCommandRepresentation.Build(tokens);
+            return ExternalCommandRepresentation.Build(tokens, context);
 
         throw new ParseException(tokens);
     }

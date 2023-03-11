@@ -1,7 +1,8 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Exceptions;
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Semantics.Context;
+using CSharpBashInterpreter.Semantics.Parsing;
 using FluentAssertions;
 
 namespace CSharpBashInterpreter.Tests.SemanticsTests;

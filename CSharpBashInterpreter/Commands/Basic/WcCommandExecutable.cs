@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.IO.Pipes;
-using System.Text;
-
-namespace CSharpBashInterpreter.Commands.Basic;
+﻿namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
 /// Executable for bash wc command

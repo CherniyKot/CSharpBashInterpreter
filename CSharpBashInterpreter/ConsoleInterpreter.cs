@@ -1,5 +1,5 @@
-﻿using CSharpBashInterpreter.Commands.Meta.Utility;
-using CSharpBashInterpreter.Semantics;
+﻿using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter;
 
@@ -7,11 +7,13 @@ public sealed class ConsoleInterpreter
 {
     private readonly ITokenizer _tokenizer;
     private readonly ICommandParser _commandParser;
+    private readonly IContextManager _contextManager;
 
-    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser)
+    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser, IContextManager contextManager)
     {
         _tokenizer = tokenizer;
         _commandParser = commandParser;
+        _contextManager = contextManager;
 
         Console.OutputEncoding = System.Text.Encoding.UTF8;
     }
@@ -20,7 +22,7 @@ public sealed class ConsoleInterpreter
     {
         Console.CancelKeyPress += ConsoleCancelEventHandler;
 
-        var context = new DefaultContext();
+        var context = _contextManager.GenerateContext();
 
         while (!token.IsCancellationRequested)
             await ExecuteLoop(context);
@@ -33,7 +35,8 @@ public sealed class ConsoleInterpreter
         try
         {
             var line = Console.ReadLine() ?? "";
-            var tokens = _tokenizer.Tokenize(line);
+            var substituteLine = _contextManager.SubstituteVariablesInText(line, context);
+            var tokens = _tokenizer.Tokenize(substituteLine);
             if (tokens.Length == 0)
                 return;
             await using var command = _commandParser.Parse(tokens, context);
