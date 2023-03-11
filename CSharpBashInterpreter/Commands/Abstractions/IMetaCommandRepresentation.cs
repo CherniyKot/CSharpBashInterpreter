@@ -5,7 +5,7 @@ namespace CSharpBashInterpreter.Commands.Abstractions;
 /// <summary>
 /// Provide information of meta command, who process input and provide additional logic
 /// </summary>
-public interface IMetaCommandRepresentation : IAbstractCommandRepresentation<IEnumerable<string>>
+public interface IMetaCommandRepresentation : IAbstractCommandRepresentation
 {
     /// <summary>
     /// Build combined executable with custom processed string.
