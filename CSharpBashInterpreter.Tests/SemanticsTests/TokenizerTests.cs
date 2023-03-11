@@ -45,6 +45,16 @@ public class TokenizerTests
         var result2 = _tokenizer.Tokenize("""hello 'my dear' world""");
 
         result.Should().BeEquivalentTo("hello", "my dear", "world");
-        result.Length.Should().Be(3);
+        result2.Should().BeEquivalentTo("hello", "my dear", "world");
+    }
+
+    [Fact]
+    public void TestTokenizerQuotesWithEnvironmentSubstitute()
+    {
+        var result = _tokenizer.Tokenize("""hello=world""");
+        var result2 = _tokenizer.Tokenize("""hello=my dear "world" """);
+
+        result.Should().BeEquivalentTo("hello", "=", "world");
+        result2.Should().BeEquivalentTo("hello", "=", """my dear "world" """);
     }
 }

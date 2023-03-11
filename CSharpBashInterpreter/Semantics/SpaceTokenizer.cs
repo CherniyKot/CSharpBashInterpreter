@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+﻿using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Semantics;
 
@@ -6,17 +6,18 @@ namespace CSharpBashInterpreter.Semantics;
 /// Implementation of <see cref="ITokenizer"/>, who emulating
 /// equal logic of parsing like bash
 /// </summary>
-public partial class SpaceTokenizer : ITokenizer
+public class SpaceTokenizer : ITokenizer
 {
-    public string[] Tokenize(string input) => QuoteRegexParser()
+    public string[] Tokenize(string input) =>
+        RegularExpressions.QuoteTokenizerRegex()
         .Matches(input)
-        .Select(match => match.Groups[0].Value[0] switch
+        .SelectMany(match => match.Groups[0].Value[0] switch
         {
-            '"' => match.Groups[1].Value,
-            '\'' => match.Groups[2].Value,
-            _ => match.Groups[0].Value
+            '"' => new[] { match.Groups[3].Value },
+            '\'' => new[] { match.Groups[4].Value },
+            _ => match.Groups[1].Success
+                ? new[] { match.Groups[1].Value, "=", match.Groups[2].Value }
+                : new[] { match.Groups[0].Value }
         }).ToArray();
 
-    [GeneratedRegex("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'")]
-    private static partial Regex QuoteRegexParser();
 }
