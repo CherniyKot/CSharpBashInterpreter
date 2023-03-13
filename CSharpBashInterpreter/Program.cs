@@ -22,7 +22,8 @@ var commandsParser = new DefaultCommandsParser
     },
     MetaCommands = new IMetaCommandRepresentation[]
     {
-        new ContextSetCommandRepresentation()
+        new ContextSetCommandRepresentation(),
+        new PipeCommandRepresentation()
     },
     ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };

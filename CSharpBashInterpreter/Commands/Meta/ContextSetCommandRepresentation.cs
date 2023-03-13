@@ -14,6 +14,8 @@ public class ContextSetCommandRepresentation : IMetaCommandRepresentation
         return enumerable is [_, "=", _];
     }
 
-    public ICommandExecutable Build(string[] input, IContext context, ICommandParser parser) =>
-        new ContextSetCommandExecutable(input, context);
+    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser)
+    {
+        return new ContextSetCommandExecutable(input, context);
+    }
 }

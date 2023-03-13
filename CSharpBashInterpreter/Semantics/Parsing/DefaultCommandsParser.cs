@@ -25,7 +25,7 @@ public class DefaultCommandsParser : ICommandParser
     public IExternalCommandRepresentation? ExternalCommandRepresentation { get; init; }
 
 
-    public ICommandExecutable Parse(string[] tokens, IContext context)
+    public ICommandExecutable Parse(IEnumerable<string> tokens, IContext context)
     {
         foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(tokens)))
             return metaCommand.Build(tokens, context, this);

@@ -14,14 +14,14 @@ public class LsCommandExecutable : BaseCommandExecutable
 
     protected override async Task<int> ExecuteInternalAsync()
     {
-        var args = Tokens.Skip(1);
+        var args = Tokens.Skip(1).ToList();
         try
         {
             var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
             var files = Directory.GetFiles(path);
             foreach (var file in files)
             {
-                await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
+                await OutputStream.WriteLineAsync(Path.GetFileName(file));
                 await OutputStream.FlushAsync();
             }
         }

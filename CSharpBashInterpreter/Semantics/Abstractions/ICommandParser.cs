@@ -12,5 +12,5 @@ public interface ICommandParser
     /// </summary>
     /// <param name="input">Tokenized input string</param>
     /// <param name="context"></param>
-    ICommandExecutable Parse(string[] input, IContext context);
+    ICommandExecutable Parse(IEnumerable<string> input, IContext context);
 }

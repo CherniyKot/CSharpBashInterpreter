@@ -9,9 +9,6 @@
 /// </summary>
 public class WcCommandExecutable : BaseCommandExecutable
 {
-    private const int BufferSize = 256;
-    private readonly char[] _buffer = new char[BufferSize];
-
     public WcCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     { }
 
@@ -70,12 +67,17 @@ public class WcCommandExecutable : BaseCommandExecutable
                 var encoding = InputStream.CurrentEncoding;
                 while (InputStream.BaseStream.CanRead)
                 {
-                    var s = await InputStream.ReadLineAsync();
-                    if (string.IsNullOrEmpty(s)) continue;
+                    var task = InputStream.ReadLineAsync();
+                    var result = await task;
+                    if (task is { IsCompletedSuccessfully: true, AsyncState: { } })
+                    {
+                        break;
+                    }
+                    if (string.IsNullOrEmpty(result)) continue;
 
                     lines++;
-                    words += s.Split().Length;
-                    bytes += encoding.GetByteCount(s+ Environment.NewLine);
+                    words += result.Split().Length;
+                    bytes += encoding.GetByteCount(result+ Environment.NewLine);
                 }
                 await OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
             }

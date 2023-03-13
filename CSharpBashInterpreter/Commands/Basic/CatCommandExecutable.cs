@@ -1,4 +1,8 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using System.IO.Pipelines;
+using System.IO.Pipes;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
 /// Executable for bash cat command
@@ -28,9 +32,25 @@ public class CatCommandExecutable : BaseCommandExecutable
                     {
                         while (InputStream.BaseStream.CanRead)
                         {
-                            var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
+                            var task = InputStream.ReadAsync(_buffer, 0, BufferSize);
+                            var result = await task;
+                            if (InputStream.BaseStream is InterruptableConsoleStream)
+                            {
+                                if (!InputStream.BaseStream.CanRead)
+                                {
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                if (task.IsCompleted)
+                                {
+                                    break;
+                                }
+                            }
+                            await OutputStream.WriteAsync(_buffer, 0, result);
                             await OutputStream.FlushAsync();
+                            
                         }
                     }
                     else
@@ -58,8 +78,23 @@ public class CatCommandExecutable : BaseCommandExecutable
             {
                 while (InputStream.BaseStream.CanRead)
                 {
-                    var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                    await OutputStream.WriteAsync(_buffer, 0, bytesRead);
+                    var task = InputStream.ReadAsync(_buffer, 0, BufferSize);
+                    var result = await task;
+                    if (InputStream.BaseStream is InterruptableConsoleStream)
+                    {
+                        if (!InputStream.BaseStream.CanRead)
+                        {
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (task.IsCompleted)
+                        {
+                            break;
+                        }
+                    }
+                    await OutputStream.WriteAsync(_buffer, 0, result);
                     await OutputStream.FlushAsync();
                 }
             }

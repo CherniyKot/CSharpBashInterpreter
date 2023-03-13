@@ -14,5 +14,5 @@ public interface IMetaCommandRepresentation : IAbstractCommandRepresentation
     /// <param name="context">Environment context</param>
     /// <param name="parser">Parsed for additional command parsing</param>
     /// <returns></returns>
-    ICommandExecutable Build(string[] input, IContext context, ICommandParser parser);
+    ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser);
 }
