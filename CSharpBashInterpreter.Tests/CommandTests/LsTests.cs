@@ -20,7 +20,7 @@ public class LsTests
         using (var writer = new StreamWriter(pipe.Writer.AsStream()))
         using (var reader = new StreamReader(pipe.Reader.AsStream()))
         {
-            lsCommandExecutable.StreamSet.OutputStream = writer;
+            lsCommandExecutable.StreamSet.OutputStream = writer.BaseStream;
             lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(testText);
         }
@@ -39,7 +39,7 @@ public class LsTests
         using (var writer = new StreamWriter(pipe.Writer.AsStream()))
         using (var reader = new StreamReader(pipe.Reader.AsStream()))
         {
-            lsCommandExecutable.StreamSet.OutputStream = writer;
+            lsCommandExecutable.StreamSet.OutputStream = writer.BaseStream;
             lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(testText);
         }

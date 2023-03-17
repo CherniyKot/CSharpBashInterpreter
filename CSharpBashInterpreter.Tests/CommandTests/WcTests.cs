@@ -22,7 +22,7 @@ public class WcTests
             using (var writer = new StreamWriter(pipe.Writer.AsStream()))
             using (var reader = new StreamReader(pipe.Reader.AsStream()))
             {
-                wcCommandExecutable.StreamSet.OutputStream = writer;
+                wcCommandExecutable.StreamSet.OutputStream = writer.BaseStream;
                 wcCommandExecutable.ExecuteAsync().Result.Should().Be(0);
                 reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
             }

@@ -15,7 +15,7 @@ public class PwdTests
         using (var writer = new StreamWriter(pipe.Writer.AsStream()))
         using (var reader = new StreamReader(pipe.Reader.AsStream()))
         {
-            pwdCommandExecutable.StreamSet.OutputStream = writer;
+            pwdCommandExecutable.StreamSet.OutputStream = writer.BaseStream;
             pwdCommandExecutable.ExecuteAsync().Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
         }
