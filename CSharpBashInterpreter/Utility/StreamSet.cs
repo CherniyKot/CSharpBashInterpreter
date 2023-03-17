@@ -32,15 +32,16 @@ public class StreamSet : IAsyncDisposable
             {
                 var bytesRead = await source.ReadAsync(new Memory<byte>(buffer)).ConfigureAwait(false);
                 await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead)).ConfigureAwait(false);
+                await destination.FlushAsync();
             }
         }
         catch (Exception e) when (e is InvalidOperationException or NotSupportedException)
         {
-            await source.DisposeAsync();
-            await destination.DisposeAsync();
         }
         finally
         {
+            await source.DisposeAsync();
+            await destination.DisposeAsync();
             ArrayPool<byte>.Shared.Return(buffer);
         }
     }
