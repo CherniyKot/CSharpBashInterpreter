@@ -27,8 +27,8 @@ public class LsCommandExecutable : BaseCommandExecutable
             foreach (var file in files)
             {
                 await outputStream.WriteLineAsync(Path.GetFileName(file));
-                await outputStream.FlushAsync();
             }
+            await outputStream.FlushAsync();
         }
         catch (Exception e)
         {

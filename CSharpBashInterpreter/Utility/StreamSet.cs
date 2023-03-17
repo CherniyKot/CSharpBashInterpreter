@@ -23,7 +23,6 @@ public class StreamSet : IAsyncDisposable
         ErrorStream.Close();
     }
 
-
     public static async Task CopyToAsync(Stream source, Stream destination)
     {
         var buffer = ArrayPool<byte>.Shared.Rent(256);
@@ -31,14 +30,14 @@ public class StreamSet : IAsyncDisposable
         {
             while (true)
             {
-                int bytesRead = await source.ReadAsync(new Memory<byte>(buffer)).ConfigureAwait(false);
+                var bytesRead = await source.ReadAsync(new Memory<byte>(buffer)).ConfigureAwait(false);
                 await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead)).ConfigureAwait(false);
             }
         }
         catch (Exception e) when (e is InvalidOperationException or NotSupportedException)
         {
-            source.Close();
-            destination.Close();
+            await source.DisposeAsync();
+            await destination.DisposeAsync();
         }
         finally
         {

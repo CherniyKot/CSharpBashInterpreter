@@ -41,7 +41,7 @@ public class PipeCommandExecutable : BaseCommandExecutable
         var leftTask = _left.ExecuteAsync();
         var rightTask = _right.ExecuteAsync();
         
-        await Task.WhenAll(leftCopyTask, rightCopyTask);
+        await Task.WhenAny(leftCopyTask, rightCopyTask);
         return (await Task.WhenAll(leftTask, rightTask)).FirstOrDefault(x => x != 0);
     }
 }

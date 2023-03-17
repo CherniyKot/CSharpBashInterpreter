@@ -54,4 +54,10 @@ public class InterruptableConsoleStream : Stream
             _baseStream.Write(buffer, offset, count);
         }
     }
+
+    public override void Close()
+    {
+        base.Close();
+        Interrupt();
+    }
 }
