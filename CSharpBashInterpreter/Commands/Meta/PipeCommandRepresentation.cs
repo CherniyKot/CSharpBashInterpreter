@@ -4,20 +4,24 @@ using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
-/// <summary>
-///     Used for provide substitution of input string
-/// </summary>
-public class ContextSetCommandRepresentation : IMetaCommandRepresentation
+public class PipeCommandRepresentation : IMetaCommandRepresentation
 {
+    private readonly string _delimiter = "|";
+
+    public PipeCommandRepresentation(string? delimiter = null)
+    {
+        if (delimiter is not null)
+            _delimiter = delimiter;
+    }
+
     public bool CanBeParsed(IEnumerable<string> data)
     {
-        var enumerable = data as string[] ?? data.ToArray();
-        return enumerable is [_, "=", _];
+        return data.Contains(_delimiter);
     }
 
     public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser,
         StreamSet streamSet)
     {
-        return new ContextSetCommandExecutable(input, context, streamSet);
+        return new PipeCommandExecutable(input, _delimiter, context, parser, streamSet);
     }
 }

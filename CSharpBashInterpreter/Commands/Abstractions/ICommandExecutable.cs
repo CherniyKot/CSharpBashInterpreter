@@ -1,16 +1,16 @@
-﻿namespace CSharpBashInterpreter.Commands.Abstractions;
+﻿using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Abstractions;
 
 /// <summary>
-/// Command runtime executable with built arguments
+///     Command runtime executable with built arguments
 /// </summary>
 public interface ICommandExecutable : IAsyncDisposable
 {
-    StreamReader InputStream { get; set; }
-    StreamWriter OutputStream { get; set; }
-    StreamWriter ErrorStream { get; set; }
+    StreamSet StreamSet { get; set; }
 
     /// <summary>
-    /// Run command action
+    ///     Run command action
     /// </summary>
     /// <returns></returns>
     Task<int> ExecuteAsync();

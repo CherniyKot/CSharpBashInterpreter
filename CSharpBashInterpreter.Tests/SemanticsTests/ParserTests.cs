@@ -3,6 +3,7 @@ using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Exceptions;
 using CSharpBashInterpreter.Semantics.Context;
 using CSharpBashInterpreter.Semantics.Parsing;
+using CSharpBashInterpreter.Utility;
 using FluentAssertions;
 
 namespace CSharpBashInterpreter.Tests.SemanticsTests;
@@ -21,7 +22,7 @@ public class ParserTests
 
         var tokens = new[] { "" };
 
-        Assert.Throws<ParseException>(() => parser.Parse(tokens, context));
+        Assert.Throws<ParseException>(() => parser.Parse(tokens, context, new StreamSet()));
     }
 
     [Fact]
@@ -42,7 +43,7 @@ public class ParserTests
 
         try
         {
-            var result = parser.Parse(tokens, context);
+            var result = parser.Parse(tokens, context, new StreamSet());
             result.Should().BeOfType<CatCommandExecutable>();
         }
         finally

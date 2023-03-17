@@ -1,75 +1,48 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-/// Executable for bash cat command
-/// Takes list of tokens starting with "cat" and processes the rest of them as arguments
-/// Without arguments consumes strings from input stream snd copies them to the output stream
-/// Arguments are interpreted as list of files and "-" strings
-/// Concatenates contents of files (and input stream for "-") and copies result to the output stream
+///     Executable for bash cat command
+///     Takes list of tokens starting with "cat" and processes the rest of them as arguments
+///     Without arguments consumes strings from input stream snd copies them to the output stream
+///     Arguments are interpreted as list of files and "-" strings
+///     Concatenates contents of files (and input stream for "-") and copies result to the output stream
 /// </summary>
 public class CatCommandExecutable : BaseCommandExecutable
 {
-    private const int BufferSize = 256;
-    private readonly char[] _buffer = new char[BufferSize];
-
-    public CatCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    public CatCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    {
+    }
 
     protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1).ToList();
-        if (args.Any())
+        try
         {
-            foreach (var fileName in args)
-            {
-                try
-                {
+            if (args.Any())
+                foreach (var fileName in args)
                     if (fileName == "-")
                     {
-                        while (InputStream.BaseStream.CanRead)
-                        {
-                            var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
-                            await OutputStream.FlushAsync();
-                        }
+                        await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
                     }
                     else
                     {
-                        using var fileStream = File.OpenText(fileName);
-                        while (!fileStream.EndOfStream)
-                        {
-                            var bytesRead = await fileStream.ReadAsync(_buffer, 0, BufferSize);
-                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
-                            await OutputStream.FlushAsync();
-                        }
+                        await using var fileStream = File.OpenRead(fileName);
+                        await StreamSet.CopyToAsync(fileStream, StreamSet.OutputStream);
                     }
-                }
-                catch (Exception e)
-                {
-                    await ErrorStream.WriteLineAsync(e.Message);
-                    await ErrorStream.FlushAsync();
-                    return 1;
-                }
-            }
+            else
+                await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
         }
-        else
+        catch (Exception e)
         {
-            try
-            {
-                while (InputStream.BaseStream.CanRead)
-                {
-                    var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                    await OutputStream.WriteAsync(_buffer, 0, bytesRead);
-                    await OutputStream.FlushAsync();
-                }
-            }
-            catch (Exception e)
-            {
-                await ErrorStream.WriteLineAsync(e.Message);
-                await ErrorStream.FlushAsync();
-                return 1;
-            }
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
+            return 1;
         }
+
         return 0;
     }
 }
