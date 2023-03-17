@@ -1,19 +1,28 @@
-﻿using System.IO.Pipelines;
-
-namespace CSharpBashInterpreter.Utility;
+﻿namespace CSharpBashInterpreter.Utility;
 
 public class PipeStreamWrapper : Stream
 {
-    private Stream InternalStream { get; }
-    private PipeWrapper Pipe { get; }
-    
-    private bool IsOpen { get; set; } = true;
-
     public PipeStreamWrapper(PipeWrapper pipe, Stream stream)
     {
         InternalStream = stream;
         Pipe = pipe;
         pipe.CloseEvent += () => IsOpen = false;
+    }
+
+    private Stream InternalStream { get; }
+    private PipeWrapper Pipe { get; }
+
+    private bool IsOpen { get; set; } = true;
+
+    public override bool CanRead => InternalStream.CanRead && (IsOpen || Length > Position);
+    public override bool CanSeek => InternalStream.CanSeek && (IsOpen || Length > Position);
+    public override bool CanWrite => InternalStream.CanWrite && (IsOpen || Length > Position);
+    public override long Length => Pipe.Length;
+
+    public override long Position
+    {
+        get => Pipe.Position;
+        set => Pipe.Position = value;
     }
 
     public override void Flush()
@@ -23,21 +32,25 @@ public class PipeStreamWrapper : Stream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        return InternalStream.Read(buffer, offset, count);
+        var result = InternalStream.Read(buffer, offset, count);
+        Position += result;
+        return result;
     }
 
     public override long Seek(long offset, SeekOrigin origin)
     {
-        return InternalStream.Seek(offset, origin);
+        Position = InternalStream.Seek(offset, origin);
+        return Position;
     }
 
     public override void SetLength(long value)
     {
-        InternalStream.SetLength(value);
+        Pipe.Length = value;
     }
 
     public override void Write(byte[] buffer, int offset, int count)
     {
+        Pipe.Length += count;
         InternalStream.Write(buffer, offset, count);
     }
 
@@ -45,16 +58,5 @@ public class PipeStreamWrapper : Stream
     {
         base.Close();
         Pipe.Close();
-    }
-
-    public override bool CanRead => InternalStream.CanRead && IsOpen;
-    public override bool CanSeek => InternalStream.CanSeek && IsOpen;
-    public override bool CanWrite => InternalStream.CanWrite && IsOpen;
-    public override long Length => InternalStream.Length;
-
-    public override long Position
-    {
-        get => InternalStream.Position;
-        set => InternalStream.Position = value;
     }
 }

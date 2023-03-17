@@ -8,7 +8,7 @@ namespace CSharpBashInterpreter.Tests.CommandTests;
 
 public class CatTests
 {
-    [Fact(Skip = "I broke everything in the last moment")]
+    [Fact]
     public void TestCatOnSingleFile()
     {
         var tempFileName = Path.GetTempFileName();
@@ -30,7 +30,7 @@ public class CatTests
         }
     }
 
-    [Fact(Skip = "I broke everything in the last moment")]
+    [Fact]
     public void TestCatOnMultipleFiles()
     {
         var tempFiles = new List<string> { "cat" };
@@ -54,26 +54,28 @@ public class CatTests
         }
         finally
         {
-            tempFiles.ForEach(File.Delete);
+            tempFiles.Skip(1).ToList().ForEach(File.Delete);
         }
     }
 
-    [Fact(Skip = "Stream reading is not cancellable yet")]
+    [Fact(Skip = "Console stream is tricky and powerful")]
     public void TestCatOnInputStream()
     {
         var testText = Lorem.Paragraph();
         var catCommandExecutable = new CatCommandExecutable(new[] { "cat" }, new StreamSet());
-        var pipeInput = new Pipe();
-        var pipeOutput = new Pipe();
+        var pipeInput = new PipeWrapper();
+        var pipeOutput = new PipeWrapper();
         
-        catCommandExecutable.StreamSet.InputStream = pipeInput.Reader.AsStream();
-        catCommandExecutable.StreamSet.OutputStream = pipeOutput.Writer.AsStream();
-        catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        catCommandExecutable.StreamSet.InputStream = pipeInput.ReaderStream;
+        catCommandExecutable.StreamSet.OutputStream = pipeOutput.WriterStream;
         
-        using var writerInput = new StreamWriter(pipeInput.Writer.AsStream());
-        using var readerOutput = new StreamReader(pipeOutput.Reader.AsStream());
+        using var writerInput = new StreamWriter(pipeInput.WriterStream);
+        using var readerOutput = new StreamReader(pipeOutput.ReaderStream);
         writerInput.WriteLine(testText);
+        writerInput.Flush();
+        var task = catCommandExecutable.ExecuteAsync();
         writerInput.Close();
         readerOutput.ReadToEndAsync().Result.Should().Be(testText);
+        task.Result.Should().Be(0);
     }
 }

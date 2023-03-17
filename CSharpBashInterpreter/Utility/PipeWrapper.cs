@@ -6,7 +6,10 @@ public class PipeWrapper
 {
     public PipeStreamWrapper ReaderStream { get; }
     public PipeStreamWrapper WriterStream { get; }
-    public Pipe Pipe { get; } = new Pipe();
+    private Pipe Pipe { get; } = new();
+
+    public long Position { get; set; }
+    public long Length { get; set; }
 
     public event Action CloseEvent;
 
@@ -19,7 +22,7 @@ public class PipeWrapper
     public void Close()
     {
         CloseEvent();
-        Pipe.Reader.Complete();
-        Pipe.Writer.Complete();
+        // Pipe.Reader.Complete();
+        // Pipe.Writer.Complete();
     }
 }
