@@ -23,16 +23,18 @@ public class LsCommandExecutable : BaseCommandExecutable
         {
             var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
             var files = Directory.GetFiles(path);
+            await using var outputStream = new StreamWriter(StreamSet.OutputStream);
             foreach (var file in files)
             {
-                await StreamSet.OutputStream.WriteLineAsync(Path.GetFileName(file));
-                await StreamSet.OutputStream.FlushAsync();
+                await outputStream.WriteLineAsync(Path.GetFileName(file));
+                await outputStream.FlushAsync();
             }
         }
         catch (Exception e)
         {
-            await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-            await StreamSet.ErrorStream.FlushAsync();
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
             return 1;
         }
 

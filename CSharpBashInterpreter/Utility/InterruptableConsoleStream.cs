@@ -5,12 +5,10 @@ public class InterruptableConsoleStream : Stream
     private static bool _isInterrupted;
 
     private readonly Stream _baseStream = Console.OpenStandardInput();
-    // private static CancellationTokenSource TokenSource;
 
     public InterruptableConsoleStream()
     {
         _isInterrupted = false;
-        // TokenSource = new();
     }
 
     public override bool CanRead => _baseStream.CanRead && !_isInterrupted;
@@ -27,7 +25,6 @@ public class InterruptableConsoleStream : Stream
     public static void Interrupt()
     {
         _isInterrupted = true;
-        // TokenSource.Cancel();
     }
 
     public override void Flush()
@@ -37,14 +34,7 @@ public class InterruptableConsoleStream : Stream
 
     public override int Read(byte[] buffer, int offset, int count)
     {
-        return _baseStream.Read(buffer, offset, count);
-    }
-
-    public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-    {
-        var task = base.ReadAsync(buffer, offset, count, cancellationToken);
-        // TokenSource.Token.ThrowIfCancellationRequested();
-        return task;
+        return _isInterrupted ? 0 : _baseStream.Read(buffer, offset, count);
     }
 
     public override long Seek(long offset, SeekOrigin origin)
@@ -59,6 +49,9 @@ public class InterruptableConsoleStream : Stream
 
     public override void Write(byte[] buffer, int offset, int count)
     {
-        _baseStream.Write(buffer, offset, count);
+        if (!_isInterrupted)
+        {
+            _baseStream.Write(buffer, offset, count);
+        }
     }
 }

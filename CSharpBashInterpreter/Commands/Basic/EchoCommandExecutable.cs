@@ -19,13 +19,15 @@ public class EchoCommandExecutable : BaseCommandExecutable
         try
         {
             var concatArgs = string.Join(' ', Tokens.Skip(1));
-            await StreamSet.OutputStream.WriteLineAsync(concatArgs);
-            await StreamSet.OutputStream.FlushAsync();
+            await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+            await outputStream.WriteLineAsync(concatArgs);
+            await outputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-            await StreamSet.ErrorStream.FlushAsync();
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
             return 1;
         }
 

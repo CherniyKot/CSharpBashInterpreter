@@ -18,13 +18,15 @@ public class PwdCommandExecutable : BaseCommandExecutable
     {
         try
         {
-            await StreamSet.OutputStream.WriteLineAsync(Directory.GetCurrentDirectory());
-            await StreamSet.OutputStream.FlushAsync();
+            await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+            await outputStream.WriteLineAsync(Directory.GetCurrentDirectory());
+            await outputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-            await StreamSet.ErrorStream.FlushAsync();
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
             return 1;
         }
 

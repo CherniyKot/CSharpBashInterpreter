@@ -19,6 +19,7 @@ public class WcCommandExecutable : BaseCommandExecutable
     protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1).ToList();
+        await using var outputStream = new StreamWriter(StreamSet.OutputStream);
         if (args.Any())
         {
             long totalLines = 0;
@@ -43,41 +44,44 @@ public class WcCommandExecutable : BaseCommandExecutable
                     totalLines += lines;
                     totalBytes += bytes;
                     totalWords += words;
-                    await StreamSet.OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
+                    await outputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
                 }
                 catch (Exception e)
                 {
-                    await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-                    await StreamSet.ErrorStream.FlushAsync();
+                    await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+                    await errorStream.WriteLineAsync(e.Message);
+                    await errorStream.FlushAsync();
                     return 1;
                 }
             }
 
             if (args.Count > 1)
-                await StreamSet.OutputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
+                await outputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
         }
         else
         {
+            using var inputStream = new StreamReader(StreamSet.InputStream);
             try
             {
                 var lines = 0;
                 var words = 0;
                 var bytes = 0;
-                var encoding = StreamSet.InputStream.CurrentEncoding;
-                while (StreamSet.InputStream.BaseStream.CanRead)
+                var encoding = inputStream.CurrentEncoding;
+                while (StreamSet.InputStream.CanRead)
                 {
-                    var result = await StreamSet.InputStream.ReadLineAsync();
+                    var result = await inputStream.ReadLineAsync() ?? "";
                     lines++;
                     words += result.Split().Length;
                     bytes += encoding.GetByteCount(result + Environment.NewLine);
                 }
 
-                await StreamSet.OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
+                await outputStream.WriteLineAsync($"{lines} {words} {bytes}");
             }
             catch (Exception e)
             {
-                await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-                await StreamSet.ErrorStream.FlushAsync();
+                await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+                await errorStream.WriteLineAsync(e.Message);
+                await errorStream.FlushAsync();
                 return 1;
             }
         }

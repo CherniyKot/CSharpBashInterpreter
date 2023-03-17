@@ -19,37 +19,29 @@ public class CatCommandExecutable : BaseCommandExecutable
     protected override async Task<int> ExecuteInternalAsync()
     {
         var args = Tokens.Skip(1).ToList();
-        if (args.Any())
-            foreach (var fileName in args)
-                try
-                {
+        try
+        {
+            if (args.Any())
+                foreach (var fileName in args)
                     if (fileName == "-")
                     {
-                        await StreamSet.InputStream.BaseStream.CopyToAsync(StreamSet.OutputStream.BaseStream);
+                        await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
                     }
                     else
                     {
                         await using var fileStream = File.OpenRead(fileName);
-                        await fileStream.CopyToAsync(StreamSet.OutputStream.BaseStream);
+                        await StreamSet.CopyToAsync(fileStream, StreamSet.OutputStream);
                     }
-                }
-                catch (Exception e)
-                {
-                    await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-                    await StreamSet.ErrorStream.FlushAsync();
-                    return 1;
-                }
-        else
-            try
-            {
-                await StreamSet.InputStream.BaseStream.CopyToAsync(StreamSet.OutputStream.BaseStream);
-            }
-            catch (Exception e)
-            {
-                await StreamSet.ErrorStream.WriteLineAsync(e.Message);
-                await StreamSet.ErrorStream.FlushAsync();
-                return 1;
-            }
+            else
+                await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
+        }
+        catch (Exception e)
+        {
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
+            return 1;
+        }
 
         return 0;
     }
