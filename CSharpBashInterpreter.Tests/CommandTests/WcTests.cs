@@ -19,13 +19,10 @@ public class WcTests
 
             var wcCommandExecutable = new WcCommandExecutable(new[] { "wc", tempFileName }, new StreamSet());
             var pipe = new Pipe();
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                wcCommandExecutable.StreamSet.OutputStream = writer;
-                wcCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
-            }
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            wcCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+            wcCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
         }
         finally
         {

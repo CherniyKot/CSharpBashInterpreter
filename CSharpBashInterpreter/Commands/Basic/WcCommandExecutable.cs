@@ -36,7 +36,7 @@ public class WcCommandExecutable : BaseCommandExecutable
 
                     while (!fileStream.EndOfStream)
                     {
-                        var s = await fileStream.ReadLineAsync();
+                        var s = await fileStream.ReadLineAsync()??"";
                         lines++;
                         words += s.Split().Length;
                     }
@@ -85,8 +85,6 @@ public class WcCommandExecutable : BaseCommandExecutable
                 return 1;
             }
         }
-
-        await StreamSet.OutputStream.DisposeAsync();
         return 0;
     }
 }

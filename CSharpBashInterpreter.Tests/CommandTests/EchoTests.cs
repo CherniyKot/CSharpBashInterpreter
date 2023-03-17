@@ -15,12 +15,9 @@ public class EchoTests
 
         var echoCommandExecutable = new EchoCommandExecutable(new[] { "echo", testText }, new StreamSet());
         var pipe = new Pipe();
-        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-        using (var reader = new StreamReader(pipe.Reader.AsStream()))
-        {
-            echoCommandExecutable.StreamSet.OutputStream = writer;
-            echoCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Trim().Should().Be(testText);
-        }
+        using var reader = new StreamReader(pipe.Reader.AsStream());
+        echoCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+        echoCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        reader.ReadToEndAsync().Result.Trim().Should().Be(testText);
     }
 }

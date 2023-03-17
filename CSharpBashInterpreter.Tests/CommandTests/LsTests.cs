@@ -17,13 +17,10 @@ public class LsTests
 
         var lsCommandExecutable = new LsCommandExecutable(new[] { "ls" }, new StreamSet());
         var pipe = new Pipe();
-        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-        using (var reader = new StreamReader(pipe.Reader.AsStream()))
-        {
-            lsCommandExecutable.StreamSet.OutputStream = writer;
-            lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(testText);
-        }
+        using var reader = new StreamReader(pipe.Reader.AsStream());
+        lsCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+        lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 
     [Fact]
@@ -36,12 +33,9 @@ public class LsTests
 
         var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName }, new StreamSet());
         var pipe = new Pipe();
-        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-        using (var reader = new StreamReader(pipe.Reader.AsStream()))
-        {
-            lsCommandExecutable.StreamSet.OutputStream = writer;
-            lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(testText);
-        }
+        using var reader = new StreamReader(pipe.Reader.AsStream());
+        lsCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+        lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 }

@@ -19,13 +19,10 @@ public class CatTests
 
             var catCommandExecutable = new CatCommandExecutable(new[] { "cat", tempFileName }, new StreamSet());
             var pipe = new Pipe();
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                catCommandExecutable.StreamSet.OutputStream = writer;
-                catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(testText);
-            }
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            catCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(testText);
         }
         finally
         {
@@ -50,13 +47,10 @@ public class CatTests
             var catCommandExecutable = new CatCommandExecutable(tempFiles, new StreamSet());
             var pipe = new Pipe();
 
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                catCommandExecutable.StreamSet.OutputStream = writer;
-                catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
-            }
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            catCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
         }
         finally
         {
@@ -71,19 +65,15 @@ public class CatTests
         var catCommandExecutable = new CatCommandExecutable(new[] { "cat" }, new StreamSet());
         var pipeInput = new Pipe();
         var pipeOutput = new Pipe();
-
-        using (var writerInput = new StreamWriter(pipeInput.Writer.AsStream()))
-        using (var readerInput = new StreamReader(pipeInput.Reader.AsStream()))
-        using (var writerOutput = new StreamWriter(pipeOutput.Writer.AsStream()))
-        using (var readerOutput = new StreamReader(pipeOutput.Reader.AsStream()))
-        {
-            catCommandExecutable.StreamSet.InputStream = readerInput;
-            catCommandExecutable.StreamSet.OutputStream = writerOutput;
-            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-
-            writerInput.WriteLine(testText);
-            writerInput.Close();
-            readerOutput.ReadToEndAsync().Result.Should().Be(testText);
-        }
+        
+        catCommandExecutable.StreamSet.InputStream = pipeInput.Reader.AsStream();
+        catCommandExecutable.StreamSet.OutputStream = pipeOutput.Writer.AsStream();
+        catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        
+        using var writerInput = new StreamWriter(pipeInput.Writer.AsStream());
+        using var readerOutput = new StreamReader(pipeOutput.Reader.AsStream());
+        writerInput.WriteLine(testText);
+        writerInput.Close();
+        readerOutput.ReadToEndAsync().Result.Should().Be(testText);
     }
 }

@@ -12,12 +12,9 @@ public class PwdTests
     {
         var pwdCommandExecutable = new PwdCommandExecutable(new[] { "pwd" }, new StreamSet());
         var pipe = new Pipe();
-        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-        using (var reader = new StreamReader(pipe.Reader.AsStream()))
-        {
-            pwdCommandExecutable.StreamSet.OutputStream = writer;
-            pwdCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
-        }
+        using var reader = new StreamReader(pipe.Reader.AsStream());
+        pwdCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+        pwdCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
     }
 }
