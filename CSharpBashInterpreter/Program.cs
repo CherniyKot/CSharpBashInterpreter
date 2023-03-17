@@ -6,7 +6,6 @@ using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Semantics.Context;
 using CSharpBashInterpreter.Semantics.Parsing;
 
-
 var tokenizer = new SpaceTokenizer();
 var contextManager = new DefaultContextManager();
 var commandsParser = new DefaultCommandsParser
@@ -32,4 +31,3 @@ var interpreter = new ConsoleInterpreter(tokenizer, commandsParser, contextManag
 
 var tokenSource = new CancellationTokenSource();
 await interpreter.Execute(tokenSource.Token);
-

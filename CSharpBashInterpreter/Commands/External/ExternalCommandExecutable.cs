@@ -1,16 +1,19 @@
 ﻿using System.Diagnostics;
+using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.External;
 
 /// <summary>
-/// Executable for external commands (calls to OS processes)
+///     Executable for external commands (calls to OS processes)
 /// </summary>
 public class ExternalCommandExecutable : BaseCommandExecutable
 {
     private readonly IContext _context;
 
-    public ExternalCommandExecutable(IEnumerable<string> tokens, IContext context) : base(tokens)
+    public ExternalCommandExecutable(IEnumerable<string> tokens, IContext context, StreamSet streamSet) : base(tokens,
+        streamSet)
     {
         _context = context;
     }

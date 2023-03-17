@@ -1,29 +1,33 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-/// Executable for bash pwd command
-/// Takes list of 1 token "pwd"
-/// Returns current directory
+///     Executable for bash pwd command
+///     Takes list of 1 token "pwd"
+///     Returns current directory
 /// </summary>
-/// 
 public class PwdCommandExecutable : BaseCommandExecutable
 {
-    public PwdCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    public PwdCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    {
+    }
 
     protected override async Task<int> ExecuteInternalAsync()
     {
         try
         {
-            await OutputStream.WriteLineAsync(Directory.GetCurrentDirectory());
-            await OutputStream.FlushAsync();
+            await StreamSet.OutputStream.WriteLineAsync(Directory.GetCurrentDirectory());
+            await StreamSet.OutputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await ErrorStream.WriteLineAsync(e.Message);
-            await ErrorStream.FlushAsync();
+            await StreamSet.ErrorStream.WriteLineAsync(e.Message);
+            await StreamSet.ErrorStream.FlushAsync();
             return 1;
         }
+
         return 0;
     }
 }

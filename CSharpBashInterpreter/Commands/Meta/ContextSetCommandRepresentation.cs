@@ -1,10 +1,11 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
 /// <summary>
-/// Used for provide substitution of input string
+///     Used for provide substitution of input string
 /// </summary>
 public class ContextSetCommandRepresentation : IMetaCommandRepresentation
 {
@@ -14,8 +15,9 @@ public class ContextSetCommandRepresentation : IMetaCommandRepresentation
         return enumerable is [_, "=", _];
     }
 
-    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser)
+    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser,
+        StreamSet streamSet)
     {
-        return new ContextSetCommandExecutable(input, context);
+        return new ContextSetCommandExecutable(input, context, streamSet);
     }
 }

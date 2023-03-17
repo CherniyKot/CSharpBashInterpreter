@@ -1,13 +1,14 @@
-﻿using CSharpBashInterpreter.Semantics.Abstractions;
+﻿using System.Text;
+using CSharpBashInterpreter.Semantics.Abstractions;
 using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter;
 
 public sealed class ConsoleInterpreter
 {
-    private readonly ITokenizer _tokenizer;
     private readonly ICommandParser _commandParser;
     private readonly IContextManager _contextManager;
+    private readonly ITokenizer _tokenizer;
 
     public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser, IContextManager contextManager)
     {
@@ -15,7 +16,7 @@ public sealed class ConsoleInterpreter
         _commandParser = commandParser;
         _contextManager = contextManager;
 
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
     }
 
     public async Task Execute(CancellationToken token)
@@ -39,7 +40,7 @@ public sealed class ConsoleInterpreter
             var tokens = _tokenizer.Tokenize(substituteLine);
             if (tokens.Length == 0)
                 return;
-            await using var command = _commandParser.Parse(tokens, context);
+            await using var command = _commandParser.Parse(tokens, context, new StreamSet());
             var result = await command.ExecuteAsync();
             if (result != 0)
                 PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");

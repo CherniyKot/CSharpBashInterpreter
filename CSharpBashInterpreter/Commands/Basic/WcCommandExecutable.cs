@@ -1,16 +1,20 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-/// Executable for bash wc command
-/// Takes list of tokens starting with "wc" and processes the rest of them as arguments
-/// Without arguments processes strings from input stream as input
-/// Arguments are interpreted as list of files
-/// Counts number of lines, words, bytes in input and writes it to the output stream
+///     Executable for bash wc command
+///     Takes list of tokens starting with "wc" and processes the rest of them as arguments
+///     Without arguments processes strings from input stream as input
+///     Arguments are interpreted as list of files
+///     Counts number of lines, words, bytes in input and writes it to the output stream
 /// </summary>
 public class WcCommandExecutable : BaseCommandExecutable
 {
-    public WcCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    public WcCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    {
+    }
 
     protected override async Task<int> ExecuteInternalAsync()
     {
@@ -24,7 +28,7 @@ public class WcCommandExecutable : BaseCommandExecutable
             {
                 long lines = 0;
                 long words = 0;
-                long bytes = new FileInfo(fileName).Length;
+                var bytes = new FileInfo(fileName).Length;
                 try
                 {
                     using var fileStream = File.OpenText(fileName);
@@ -32,8 +36,6 @@ public class WcCommandExecutable : BaseCommandExecutable
                     while (!fileStream.EndOfStream)
                     {
                         var s = await fileStream.ReadLineAsync();
-                        if (string.IsNullOrEmpty(s)) continue;
-
                         lines++;
                         words += s.Split().Length;
                     }
@@ -41,55 +43,46 @@ public class WcCommandExecutable : BaseCommandExecutable
                     totalLines += lines;
                     totalBytes += bytes;
                     totalWords += words;
-                    await OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
+                    await StreamSet.OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
                 }
                 catch (Exception e)
                 {
-                    await ErrorStream.WriteLineAsync(e.Message);
-                    await ErrorStream.FlushAsync();
+                    await StreamSet.ErrorStream.WriteLineAsync(e.Message);
+                    await StreamSet.ErrorStream.FlushAsync();
                     return 1;
                 }
             }
 
             if (args.Count > 1)
-            {
-                await OutputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
-            }
-
+                await StreamSet.OutputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
         }
         else
         {
             try
             {
-                int lines = 0;
-                int words = 0;
-                int bytes = 0;
-                var encoding = InputStream.CurrentEncoding;
-                while (InputStream.BaseStream.CanRead)
+                var lines = 0;
+                var words = 0;
+                var bytes = 0;
+                var encoding = StreamSet.InputStream.CurrentEncoding;
+                while (StreamSet.InputStream.BaseStream.CanRead)
                 {
-                    var task = InputStream.ReadLineAsync();
-                    var result = await task;
-                    if (task is { IsCompletedSuccessfully: true, AsyncState: { } })
-                    {
-                        break;
-                    }
-                    if (string.IsNullOrEmpty(result)) continue;
-
+                    var result = await StreamSet.InputStream.ReadLineAsync();
                     lines++;
                     words += result.Split().Length;
-                    bytes += encoding.GetByteCount(result+ Environment.NewLine);
+                    bytes += encoding.GetByteCount(result + Environment.NewLine);
                 }
-                await OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
+
+                await StreamSet.OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
             }
             catch (Exception e)
             {
-                await ErrorStream.WriteLineAsync(e.Message);
-                await ErrorStream.FlushAsync();
+                await StreamSet.ErrorStream.WriteLineAsync(e.Message);
+                await StreamSet.ErrorStream.FlushAsync();
                 return 1;
             }
         }
 
-        await OutputStream.DisposeAsync();
+        await StreamSet.OutputStream.DisposeAsync();
         return 0;
     }
 }

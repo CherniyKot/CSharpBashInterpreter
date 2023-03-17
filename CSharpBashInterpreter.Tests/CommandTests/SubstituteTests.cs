@@ -1,8 +1,7 @@
-﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Commands.Meta;
+﻿using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Semantics.Abstractions;
 using CSharpBashInterpreter.Semantics.Context;
-using CSharpBashInterpreter.Semantics.Parsing;
+using CSharpBashInterpreter.Utility;
 using FluentAssertions;
 using Moq;
 
@@ -10,8 +9,8 @@ namespace CSharpBashInterpreter.Tests.CommandTests;
 
 public class SubstituteTests
 {
-    private readonly ContextSetCommandRepresentation _representation = new();
     private readonly IContext _context = new DefaultContext();
+    private readonly ContextSetCommandRepresentation _representation = new();
 
     [Fact]
     public void TestCanBeParsed()
@@ -33,7 +32,7 @@ public class SubstituteTests
         _context.EnvironmentVariables.Add(key, value);
 
         _representation.CanBeParsed(tokens).Should().BeTrue();
-        var command = _representation.Build(tokens, _context, Mock.Of<ICommandParser>());
+        var command = _representation.Build(tokens, _context, Mock.Of<ICommandParser>(), new StreamSet());
         var code = await command.ExecuteAsync();
         code.Should().Be(0);
 

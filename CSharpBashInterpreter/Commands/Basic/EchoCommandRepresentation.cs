@@ -1,14 +1,17 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-/// Representation for bash echo command
+///     Representation for bash echo command
 /// </summary>
-
-class EchoCommandRepresentation : BaseCommandRepresentation
+internal class EchoCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "echo";
-    public override BaseCommandExecutable Build(IEnumerable<string> tokens)
+
+    public override BaseCommandExecutable Build(IEnumerable<string> tokens, StreamSet streamSet)
     {
-        return new EchoCommandExecutable(tokens);
+        return new EchoCommandExecutable(tokens, streamSet);
     }
 }
