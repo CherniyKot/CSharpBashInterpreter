@@ -28,8 +28,19 @@ public class ExternalCommandExecutable : BaseCommandExecutable
         foreach (var (key, value) in _context.EnvironmentVariables)
             startInfo.EnvironmentVariables.Add(key, value);
 
-        var process = Process.Start(startInfo)!;
-        await process.WaitForExitAsync();
-        return process.ExitCode;
+        Process? process = null;
+        try
+        {
+            process = Process.Start(startInfo)!;
+            await process.WaitForExitAsync();
+        }
+        catch (Exception e)
+        {
+            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
+        }
+        
+        return process?.ExitCode ?? 1;
     }
 }
