@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -10,8 +9,8 @@ internal class EchoCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "echo";
 
-    public override BaseCommandExecutable Build(IEnumerable<string> tokens, StreamSet streamSet)
+    public override BaseCommandExecutable Build(IEnumerable<string> tokens)
     {
-        return new EchoCommandExecutable(tokens, streamSet);
+        return new EchoCommandExecutable(tokens);
     }
 }

@@ -12,7 +12,7 @@ namespace CSharpBashInterpreter.Commands.Basic;
 /// </summary>
 public class CatCommandExecutable : BaseCommandExecutable
 {
-    public CatCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    public CatCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     {
     }
 

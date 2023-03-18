@@ -3,7 +3,6 @@
 /// <summary>
 ///     Base abstraction of command information
 /// </summary>
-/// <typeparam name="TInput"></typeparam>
 public interface IAbstractCommandRepresentation
 {
     /// <summary>

@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.External;
 
@@ -12,8 +11,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
 {
     private readonly IContext _context;
 
-    public ExternalCommandExecutable(IEnumerable<string> tokens, IContext context, StreamSet streamSet) : base(tokens,
-        streamSet)
+    public ExternalCommandExecutable(IEnumerable<string> tokens, IContext context) : base(tokens)
     {
         _context = context;
     }
@@ -40,7 +38,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
             await errorStream.WriteLineAsync(e.Message);
             await errorStream.FlushAsync();
         }
-        
+
         return process?.ExitCode ?? 1;
     }
 }
