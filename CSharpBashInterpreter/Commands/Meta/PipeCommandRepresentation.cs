@@ -1,6 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
@@ -19,9 +18,8 @@ public class PipeCommandRepresentation : IMetaCommandRepresentation
         return data.Contains(_delimiter);
     }
 
-    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser,
-        StreamSet streamSet)
+    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser)
     {
-        return new PipeCommandExecutable(input, _delimiter, context, parser, streamSet);
+        return new PipeCommandExecutable(input, _delimiter, context, parser);
     }
 }
