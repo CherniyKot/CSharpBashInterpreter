@@ -37,7 +37,7 @@ public class PipeTests
             };
 
             var wcCommandExecutable = new PipeCommandExecutable(
-                new[] { "cat", tempFileName, "|", "echo" }, "", new DefaultContext(), commandsParser,  new StreamSet());
+                new[] { "cat", tempFileName, "|", "echo" }, "|", new DefaultContext(), commandsParser,  new StreamSet());
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
             wcCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
