@@ -42,13 +42,13 @@ public class PipeTests
             ss.OutputStream = pipe.Writer.AsStream();
 
             var pipeCommandExecutable = new PipeCommandExecutable(
-                new[] { "cat", tempFileName, "|", "echo" }, "|", new DefaultContext(), commandsParser, ss);
+                new[] { "echo", testText, "|", "cat" }, "|", new DefaultContext(), commandsParser, ss);
 
             using var reader = new StreamReader(pipe.Reader.AsStream());
 
             pipeCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
             pipeCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(testResult);
+            reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
         }
         finally
         {
