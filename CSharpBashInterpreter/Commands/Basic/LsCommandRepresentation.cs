@@ -6,7 +6,7 @@ namespace CSharpBashInterpreter.Commands.Basic;
 /// <summary>
 ///     Representation for bash ls command
 /// </summary>
-internal class LsCommandRepresentation : BaseCommandRepresentation
+public class LsCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "ls";
 
