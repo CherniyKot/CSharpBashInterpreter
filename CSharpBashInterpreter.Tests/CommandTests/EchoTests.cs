@@ -13,11 +13,14 @@ public class EchoTests
     {
         var testText = Lorem.Sentence();
 
-        var echoCommandExecutable = new EchoCommandExecutable(new[] { "echo", testText }, new StreamSet());
+        var echoCommandExecutable = new EchoCommandExecutable(new[] { "echo", testText });
         var pipe = new Pipe();
         using var reader = new StreamReader(pipe.Reader.AsStream());
-        echoCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-        echoCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        var streams = new StreamSet
+        {
+            OutputStream = pipe.Writer.AsStream(),
+        };
+        echoCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Trim().Should().Be(testText);
     }
 }

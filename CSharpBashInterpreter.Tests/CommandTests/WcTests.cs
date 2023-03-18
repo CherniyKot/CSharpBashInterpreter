@@ -17,11 +17,14 @@ public class WcTests
             var testResult = $"2 5 24 {tempFileName}";
             File.WriteAllText(tempFileName, testText);
 
-            var wcCommandExecutable = new WcCommandExecutable(new[] { "wc", tempFileName }, new StreamSet());
+            var wcCommandExecutable = new WcCommandExecutable(new[] { "wc", tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
-            wcCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-            wcCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            var streams = new StreamSet
+            {
+                OutputStream = pipe.Writer.AsStream(),
+            };
+            wcCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
         }
         finally

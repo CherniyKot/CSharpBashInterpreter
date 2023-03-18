@@ -40,8 +40,8 @@ public sealed class ConsoleInterpreter
             var tokens = _tokenizer.Tokenize(substituteLine);
             if (tokens.Length == 0)
                 return;
-            await using var command = _commandParser.Parse(tokens, context, new StreamSet());
-            var result = await command.ExecuteAsync();
+            await using var command = _commandParser.Parse(tokens, context);
+            var result = await command.ExecuteAsync(new StreamSet());
             if (result != 0)
                 PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");
         }

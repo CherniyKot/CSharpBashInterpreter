@@ -1,6 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
@@ -11,8 +10,7 @@ public class ContextSetCommandExecutable : BaseCommandExecutable
 {
     private readonly IContext _context;
 
-    public ContextSetCommandExecutable(IEnumerable<string> tokens, IContext context, StreamSet streamSet) : base(tokens,
-        streamSet)
+    public ContextSetCommandExecutable(IEnumerable<string> tokens, IContext context) : base(tokens)
     {
         _context = context;
     }

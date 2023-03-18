@@ -22,7 +22,7 @@ public class ParserTests
 
         var tokens = new[] { "" };
 
-        Assert.Throws<ParseException>(() => parser.Parse(tokens, context, new StreamSet()));
+        Assert.Throws<ParseException>(() => parser.Parse(tokens, context));
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class ParserTests
 
         try
         {
-            var result = parser.Parse(tokens, context, new StreamSet());
+            var result = parser.Parse(tokens, context);
             result.Should().BeOfType<CatCommandExecutable>();
         }
         finally

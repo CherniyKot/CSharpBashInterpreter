@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -12,7 +11,7 @@ namespace CSharpBashInterpreter.Commands.Basic;
 /// </summary>
 public class WcCommandExecutable : BaseCommandExecutable
 {
-    public WcCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    public WcCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     {
     }
 

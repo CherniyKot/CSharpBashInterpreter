@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -10,8 +9,8 @@ internal class LsCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "ls";
 
-    public override ICommandExecutable Build(IEnumerable<string> tokens, StreamSet streamSet)
+    public override ICommandExecutable Build(IEnumerable<string> tokens)
     {
-        return new LsCommandExecutable(tokens, streamSet);
+        return new LsCommandExecutable(tokens);
     }
 }

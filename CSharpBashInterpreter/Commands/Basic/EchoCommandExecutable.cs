@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -10,7 +9,7 @@ namespace CSharpBashInterpreter.Commands.Basic;
 /// </summary>
 public class EchoCommandExecutable : BaseCommandExecutable
 {
-    public EchoCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet) : base(tokens, streamSet)
+    public EchoCommandExecutable(IEnumerable<string> tokens) : base(tokens)
     {
     }
 

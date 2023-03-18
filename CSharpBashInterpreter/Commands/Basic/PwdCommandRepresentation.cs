@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -10,8 +9,8 @@ public class PwdCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "pwd";
 
-    public override BaseCommandExecutable Build(IEnumerable<string> tokens, StreamSet streamSet)
+    public override BaseCommandExecutable Build(IEnumerable<string> tokens)
     {
-        return new PwdCommandExecutable(tokens, streamSet);
+        return new PwdCommandExecutable(tokens);
     }
 }

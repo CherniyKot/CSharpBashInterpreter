@@ -1,6 +1,4 @@
-﻿using CSharpBashInterpreter.Utility;
-
-namespace CSharpBashInterpreter.Commands.Abstractions;
+﻿namespace CSharpBashInterpreter.Commands.Abstractions;
 
 /// <summary>
 ///     Provide information and logic of basic calling command
@@ -10,5 +8,5 @@ public interface ICommandRepresentation : IAbstractCommandRepresentation
     /// <summary>
     ///     Build command runtime with applied arguments from tokens
     /// </summary>
-    ICommandExecutable Build(IEnumerable<string> tokens, StreamSet streamSet);
+    ICommandExecutable Build(IEnumerable<string> tokens);
 }

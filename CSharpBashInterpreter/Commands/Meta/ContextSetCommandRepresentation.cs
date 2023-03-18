@@ -1,6 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
@@ -15,9 +14,8 @@ public class ContextSetCommandRepresentation : IMetaCommandRepresentation
         return enumerable is [_, "=", _];
     }
 
-    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser,
-        StreamSet streamSet)
+    public ICommandExecutable Build(IEnumerable<string> input, IContext context, ICommandParser parser)
     {
-        return new ContextSetCommandExecutable(input, context, streamSet);
+        return new ContextSetCommandExecutable(input, context);
     }
 }
