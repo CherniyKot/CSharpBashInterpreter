@@ -9,18 +9,18 @@ public abstract class BaseCommandExecutable : ICommandExecutable
 {
     protected readonly string[] Tokens;
 
-    protected BaseCommandExecutable(IEnumerable<string> tokens, StreamSet streamSet)
+    protected BaseCommandExecutable(IEnumerable<string> tokens)
     {
         Tokens = tokens.ToArray();
-        StreamSet = streamSet;
     }
 
-    public StreamSet StreamSet { get; set; }
+    protected StreamSet StreamSet { get; private set; } = null!;
 
-    public async Task<int> ExecuteAsync()
+    public async Task<int> ExecuteAsync(StreamSet streams)
     {
+        StreamSet = streams;
         var result = await ExecuteInternalAsync();
-        StreamSet.Close();
+        streams.Close();
         return result;
     }
 

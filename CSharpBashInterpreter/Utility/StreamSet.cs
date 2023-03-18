@@ -4,9 +4,9 @@ namespace CSharpBashInterpreter.Utility;
 
 public class StreamSet : IAsyncDisposable
 {
-    public Stream InputStream { get; set; } = new InterruptableConsoleStream();
-    public Stream OutputStream { get; set; } = Console.OpenStandardOutput();
-    public Stream ErrorStream { get; set; } = Console.OpenStandardError();
+    public Stream InputStream { get; init; } = new InterruptableConsoleStream();
+    public Stream OutputStream { get; init; } = Console.OpenStandardOutput();
+    public Stream ErrorStream { get; init; } = Console.OpenStandardError();
 
     public async ValueTask DisposeAsync()
     {

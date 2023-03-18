@@ -7,11 +7,10 @@ namespace CSharpBashInterpreter.Commands.Abstractions;
 /// </summary>
 public interface ICommandExecutable : IAsyncDisposable
 {
-    StreamSet StreamSet { get; set; }
-
     /// <summary>
     ///     Run command action
     /// </summary>
+    /// <param name="streams">Stream set for command</param>
     /// <returns></returns>
-    Task<int> ExecuteAsync();
+    Task<int> ExecuteAsync(StreamSet streams);
 }
