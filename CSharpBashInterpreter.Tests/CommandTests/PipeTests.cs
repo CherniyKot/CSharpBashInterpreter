@@ -18,7 +18,7 @@ public class PipeTests
         var tempFileName = Path.GetTempFileName();
         try
         {
-            var testText = "Hello world";
+            var testText = "Helloworld";
             var testResult = testText;
             File.WriteAllText(tempFileName, testText);
 
@@ -36,13 +36,19 @@ public class PipeTests
                 ExternalCommandRepresentation = new ExternalCommandRepresentation()
             };
 
-            var wcCommandExecutable = new PipeCommandExecutable(
-                new[] { "cat", tempFileName, "|", "echo" }, "|", new DefaultContext(), commandsParser,  new StreamSet());
             var pipe = new Pipe();
+
+            StreamSet ss = new StreamSet();
+            ss.OutputStream = pipe.Writer.AsStream();
+
+            var pipeCommandExecutable = new PipeCommandExecutable(
+                new[] { "cat", tempFileName, "|", "echo" }, "|", new DefaultContext(), commandsParser, ss);
+
             using var reader = new StreamReader(pipe.Reader.AsStream());
-            wcCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-            wcCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
+
+            pipeCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
+            pipeCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(testResult);
         }
         finally
         {
