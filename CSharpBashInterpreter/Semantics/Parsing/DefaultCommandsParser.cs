@@ -1,7 +1,6 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Exceptions;
 using CSharpBashInterpreter.Semantics.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Semantics.Parsing;
 
@@ -26,16 +25,16 @@ public class DefaultCommandsParser : ICommandParser
     public IExternalCommandRepresentation? ExternalCommandRepresentation { get; init; }
 
 
-    public ICommandExecutable Parse(IEnumerable<string> tokens, IContext context, StreamSet streamSet)
+    public ICommandExecutable Parse(IEnumerable<string> tokens, IContext context)
     {
         foreach (var metaCommand in MetaCommands.Where(x => x.CanBeParsed(tokens)))
-            return metaCommand.Build(tokens, context, this, streamSet);
+            return metaCommand.Build(tokens, context, this);
 
         foreach (var command in Commands.Where(x => x.CanBeParsed(tokens)))
-            return command.Build(tokens, streamSet);
+            return command.Build(tokens);
 
         if (ExternalCommandRepresentation is not null)
-            return ExternalCommandRepresentation.Build(tokens, context, streamSet);
+            return ExternalCommandRepresentation.Build(tokens, context);
 
         throw new ParseException(tokens);
     }

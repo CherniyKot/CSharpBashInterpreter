@@ -1,5 +1,4 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
-using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Semantics.Abstractions;
 
@@ -13,5 +12,5 @@ public interface ICommandParser
     /// </summary>
     /// <param name="input">Tokenized input string</param>
     /// <param name="context"></param>
-    ICommandExecutable Parse(IEnumerable<string> input, IContext context, StreamSet streamSet);
+    ICommandExecutable Parse(IEnumerable<string> input, IContext context);
 }
