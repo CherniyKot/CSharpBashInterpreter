@@ -17,11 +17,14 @@ public class CatTests
             var testText = Lorem.Paragraph();
             File.WriteAllText(tempFileName, testText);
 
-            var catCommandExecutable = new CatCommandExecutable(new[] { "cat", tempFileName }, new StreamSet());
+            var catCommandExecutable = new CatCommandExecutable(new[] { "cat", tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
-            catCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            var streams = new StreamSet
+            {
+                OutputStream = pipe.Writer.AsStream(),
+            };
+            catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(testText);
         }
         finally
@@ -44,12 +47,15 @@ public class CatTests
 
         try
         {
-            var catCommandExecutable = new CatCommandExecutable(tempFiles, new StreamSet());
+            var catCommandExecutable = new CatCommandExecutable(tempFiles);
             var pipe = new Pipe();
 
             using var reader = new StreamReader(pipe.Reader.AsStream());
-            catCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            var streams = new StreamSet
+            {
+                OutputStream = pipe.Writer.AsStream(),
+            };
+            catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
         }
         finally
@@ -62,18 +68,21 @@ public class CatTests
     public void TestCatOnInputStream()
     {
         var testText = Lorem.Paragraph();
-        var catCommandExecutable = new CatCommandExecutable(new[] { "cat" }, new StreamSet());
+        var catCommandExecutable = new CatCommandExecutable(new[] { "cat" });
         var pipeInput = new PipeWrapper();
         var pipeOutput = new PipeWrapper();
-        
-        catCommandExecutable.StreamSet.InputStream = pipeInput.ReaderStream;
-        catCommandExecutable.StreamSet.OutputStream = pipeOutput.WriterStream;
-        
+
+        var streams = new StreamSet
+        {
+            OutputStream = pipeOutput.WriterStream,
+            InputStream = pipeInput.ReaderStream
+        };
+
         using var writerInput = new StreamWriter(pipeInput.WriterStream);
         using var readerOutput = new StreamReader(pipeOutput.ReaderStream);
         writerInput.WriteLine(testText);
         writerInput.Flush();
-        var task = catCommandExecutable.ExecuteAsync();
+        var task = catCommandExecutable.ExecuteAsync(streams);
         writerInput.Close();
         readerOutput.ReadToEndAsync().Result.Should().Be(testText);
         task.Result.Should().Be(0);

@@ -15,11 +15,14 @@ public class LsTests
 
         foreach (var file in Directory.GetFiles(tempFileName)) testText += Path.GetFileName(file) + Environment.NewLine;
 
-        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls" }, new StreamSet());
+        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls" });
         var pipe = new Pipe();
         using var reader = new StreamReader(pipe.Reader.AsStream());
-        lsCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-        lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        var streams = new StreamSet
+        {
+            OutputStream = pipe.Writer.AsStream(),
+        };
+        lsCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 
@@ -31,11 +34,14 @@ public class LsTests
 
         foreach (var file in Directory.GetFiles(tempFileName)) testText += Path.GetFileName(file) + Environment.NewLine;
 
-        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName }, new StreamSet());
+        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName });
         var pipe = new Pipe();
         using var reader = new StreamReader(pipe.Reader.AsStream());
-        lsCommandExecutable.StreamSet.OutputStream = pipe.Writer.AsStream();
-        lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        var streams = new StreamSet
+        {
+            OutputStream = pipe.Writer.AsStream(),
+        };
+        lsCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 }
