@@ -17,6 +17,7 @@ var commandsParser = new DefaultCommandsParser
         new EchoCommandRepresentation(),
         new PwdCommandRepresentation(),
         new WcCommandRepresentation(),
+        new GrepCommandRepresentation(),
         new ExitCommandRepresentation()
     },
     MetaCommands = new IMetaCommandRepresentation[]
