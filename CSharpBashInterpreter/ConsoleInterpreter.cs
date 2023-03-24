@@ -33,6 +33,7 @@ public sealed class ConsoleInterpreter
 
     private async Task ExecuteLoop(IContext context)
     {
+        Console.Write($"[{DateTime.Now.ToShortTimeString()}] SharpBash> ");
         try
         {
             var line = Console.ReadLine() ?? "";

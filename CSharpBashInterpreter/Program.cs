@@ -29,5 +29,9 @@ var commandsParser = new DefaultCommandsParser
 
 var interpreter = new ConsoleInterpreter(tokenizer, commandsParser, contextManager);
 
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Welcome to C# Bash Interpreter!\n");
+Console.ResetColor();
+
 var tokenSource = new CancellationTokenSource();
 await interpreter.Execute(tokenSource.Token);
