@@ -130,4 +130,39 @@ public class GrepTests
             File.Delete(tempFileName);
         }
     }
+    
+    [Fact(Skip = "Waiting for fix")]
+    public void GrepTestAFlag()
+    {
+        var tempFileName = Path.GetTempFileName();
+        try
+        {
+            var testWord = Lorem.GetFirstWord();
+            var testText = String.Join(Environment.NewLine,
+                testWord,
+                Enumerable.Repeat(testWord.ToUpper(),10),
+                testWord+testWord+testWord,
+                testWord+testWord
+                );
+            File.WriteAllText(tempFileName, testText);
+
+            var grepCommandExecutable = new GrepCommandRepresentation().Build(new[] { "grep", "-A 3", testWord, tempFileName });
+            var pipe = new Pipe();
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            var streams = new StreamSet
+            {
+                OutputStream = pipe.Writer.AsStream(),
+            };
+            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            var result =reader.ReadToEndAsync().Result;
+            result.Should().NotContainAny("5:","6:","7:");
+            result.Should().ContainAll("1:","2:","3:","4:", "12:","13:");
+            result.Should().NotMatch("12:*12:");
+            result.Should().NotMatch("13:*13:");
+        }
+        finally
+        {
+            File.Delete(tempFileName);
+        }
+    }
 }
