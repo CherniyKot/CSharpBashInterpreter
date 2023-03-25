@@ -70,7 +70,7 @@ public class GrepCommandExecutable : BaseCommandExecutable
         {
             var (line, index) = matches[i];
             var count = i + 1 != matches.Length
-                ? Math.Min(afterCount, matches[i + 1].index - index)
+                ? Math.Min(afterCount, matches[i + 1].index - index - 1)
                 : afterCount;
             result.Add(line);
             result.AddRange(content.Skip(index + 1).Take(count).Select(x => x.line));
