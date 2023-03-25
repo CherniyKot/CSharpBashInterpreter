@@ -33,7 +33,7 @@ public class GrepCommandRepresentation : BaseCommandRepresentation
         public IEnumerable<string> FileNames { get; set; } = ArraySegment<string>.Empty;
 
         [Option('w')]
-        public bool UseFullWord { get; set; } = false;
+        public bool UseWordMatch { get; set; } = false;
         [Option('i')]
         public bool CaseInsensitive { get; set; } = false;
         [Option('A')]
@@ -42,7 +42,7 @@ public class GrepCommandRepresentation : BaseCommandRepresentation
         public GrepFlagsOptions ToOptions() =>
             new(Pattern,
                 FileNames,
-                UseFullWord,
+                UseWordMatch,
                 CaseInsensitive,
                 AdditionalWordMatches);
     }

@@ -2,6 +2,6 @@
 
 public record GrepFlagsOptions(string Pattern,
     IEnumerable<string> FileNames,
-    bool UseFullWord,
+    bool UseWordMatch,
     bool CaseInsensitive,
     int? AdditionalWordMatches);
