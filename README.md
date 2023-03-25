@@ -26,4 +26,6 @@
 - [CommandLineUtils](https://github.com/natemcmaster/CommandLineUtils) => представляет аналогичный функционал, но имеет более скудную wiki, что усложняет изучение и интеграцию.
 
 ## Схема классов:
-![f drawio](https://user-images.githubusercontent.com/58166593/220185491-d5e84034-e4c6-4e36-9796-44d4b69aa409.png)
+![Диаграмма без названия drawio (1)](https://user-images.githubusercontent.com/78642617/227668460-10e31c93-d089-4008-86f5-c20112c8a912.png)
+
+
