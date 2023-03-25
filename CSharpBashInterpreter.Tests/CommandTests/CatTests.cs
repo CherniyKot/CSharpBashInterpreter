@@ -8,7 +8,6 @@ namespace CSharpBashInterpreter.Tests.CommandTests;
 
 public class CatTests
 {
-    [Fact]
     [Fact(Skip = "")]
     public void TestCatOnSingleFile()
     {
