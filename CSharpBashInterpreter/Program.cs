@@ -14,6 +14,7 @@ var commandsParser = new DefaultCommandsParser
     {
         new CatCommandRepresentation(),
         new LsCommandRepresentation(),
+        new CdCommandRepresentation(),
         new EchoCommandRepresentation(),
         new PwdCommandRepresentation(),
         new WcCommandRepresentation(),

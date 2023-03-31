@@ -21,8 +21,13 @@ public class LsCommandExecutable : BaseCommandExecutable
         try
         {
             var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
+            var dirs = Directory.GetDirectories(path);
             var files = Directory.GetFiles(path);
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+            foreach (var dir in dirs)
+            {
+                await outputStream.WriteLineAsync($"{Path.GetFileName(dir)}/");
+            }
             foreach (var file in files)
             {
                 await outputStream.WriteLineAsync(Path.GetFileName(file));
