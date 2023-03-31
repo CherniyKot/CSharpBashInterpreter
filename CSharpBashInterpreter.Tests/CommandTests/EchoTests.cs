@@ -20,7 +20,7 @@ public class EchoTests
         {
             OutputStream = pipe.Writer.AsStream(),
         };
-        echoCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+        echoCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Trim().Should().Be(testText);
     }
 }

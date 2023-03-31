@@ -9,13 +9,16 @@ public sealed class ConsoleInterpreter
     private readonly ICommandParser _commandParser;
     private readonly IContextManager _contextManager;
     private readonly ITokenizer _tokenizer;
+    private readonly ConsoleState _state;
 
-    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser, IContextManager contextManager)
+    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser, IContextManager contextManager,
+        ConsoleState state)
     {
         _tokenizer = tokenizer;
         _commandParser = commandParser;
         _contextManager = contextManager;
-
+        _state = state;
+        
         Console.OutputEncoding = Encoding.UTF8;
     }
 
@@ -42,7 +45,7 @@ public sealed class ConsoleInterpreter
             if (tokens.Length == 0)
                 return;
             await using var command = _commandParser.Parse(tokens, context);
-            var result = await command.ExecuteAsync(new StreamSet());
+            var result = await command.ExecuteAsync(new StreamSet(), _state);
             if (result != 0)
                 PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");
         }

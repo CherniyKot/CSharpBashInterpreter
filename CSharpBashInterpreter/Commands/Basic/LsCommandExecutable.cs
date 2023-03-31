@@ -20,7 +20,7 @@ public class LsCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
-            var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
+            var path = args.Any() ? args.First() : ConsoleState.CurrentDirectory;
             var dirs = Directory.GetDirectories(path);
             var files = Directory.GetFiles(path);
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);

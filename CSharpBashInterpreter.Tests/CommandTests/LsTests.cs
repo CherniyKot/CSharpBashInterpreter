@@ -25,7 +25,7 @@ public class LsTests
         {
             OutputStream = pipe.Writer.AsStream(),
         };
-        lsCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+        lsCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 
@@ -47,7 +47,7 @@ public class LsTests
         {
             OutputStream = pipe.Writer.AsStream(),
         };
-        lsCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+        lsCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Should().Be(testText);
     }
 }

@@ -18,15 +18,8 @@ public class CdCommandExecutable : BaseCommandExecutable
                 throw new Exception("cd takes 1 argument --- path to the directory");
             }
             var path = args.First();
-            var cur = Directory.GetCurrentDirectory();
-            if (path.StartsWith("/"))
-            {
-                Directory.SetCurrentDirectory(path);
-            }
-            else
-            {
-                Directory.SetCurrentDirectory($"{cur}/{path}");
-            }
+            var cur = ConsoleState.CurrentDirectory;
+            ConsoleState.CurrentDirectory = path.StartsWith("/") ? path : $"{cur}/{path}";
         }
         catch (Exception e)
         {
@@ -36,6 +29,5 @@ public class CdCommandExecutable : BaseCommandExecutable
             return 1;
         }
         return 0;
-        throw new NotImplementedException();
     }
 }

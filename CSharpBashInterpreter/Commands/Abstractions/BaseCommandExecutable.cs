@@ -15,10 +15,12 @@ public abstract class BaseCommandExecutable : ICommandExecutable
     }
 
     protected StreamSet StreamSet { get; private set; } = null!;
+    protected ConsoleState ConsoleState { get; private set; }
 
-    public async Task<int> ExecuteAsync(StreamSet streams)
+    public async Task<int> ExecuteAsync(StreamSet streams, ConsoleState consoleState)
     {
         StreamSet = streams;
+        ConsoleState = consoleState;
         var result = await ExecuteInternalAsync();
         streams.Close();
         return result;

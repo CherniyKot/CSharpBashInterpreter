@@ -17,7 +17,7 @@ public class PwdTests
         {
             OutputStream = pipe.Writer.AsStream(),
         };
-        pwdCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+        pwdCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
         reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
     }
 }

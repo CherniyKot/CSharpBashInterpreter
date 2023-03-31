@@ -24,7 +24,7 @@ public class CatTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            catCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(testText);
         }
         finally
@@ -55,7 +55,7 @@ public class CatTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            catCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
         }
         finally
@@ -82,7 +82,7 @@ public class CatTests
         using var readerOutput = new StreamReader(pipeOutput.ReaderStream);
         writerInput.WriteLine(testText);
         writerInput.Flush();
-        var task = catCommandExecutable.ExecuteAsync(streams);
+        var task = catCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState());
         writerInput.Close();
         readerOutput.ReadToEndAsync().Result.Should().Be(testText);
         task.Result.Should().Be(0);

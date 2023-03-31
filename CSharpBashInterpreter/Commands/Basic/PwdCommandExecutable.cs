@@ -18,7 +18,7 @@ public class PwdCommandExecutable : BaseCommandExecutable
         try
         {
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);
-            await outputStream.WriteLineAsync(Directory.GetCurrentDirectory());
+            await outputStream.WriteLineAsync(ConsoleState.CurrentDirectory);
             await outputStream.FlushAsync();
         }
         catch (Exception e)
