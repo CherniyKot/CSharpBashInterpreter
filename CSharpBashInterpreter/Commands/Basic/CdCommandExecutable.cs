@@ -13,13 +13,18 @@ public class CdCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
-            if (!args.Any())
+            string path;
+            if (args.Any())
             {
-                throw new Exception("cd takes 1 argument --- path to the directory");
+                path = args.First();
+                var cur = ConsoleState.CurrentDirectory;
+                path = path.StartsWith("/") ? path : $"{cur}/{path}";
             }
-            var path = args.First();
-            var cur = ConsoleState.CurrentDirectory;
-            ConsoleState.CurrentDirectory = path.StartsWith("/") ? path : $"{cur}/{path}";
+            else
+            {
+                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            }
+            ConsoleState.CurrentDirectory = path;
         }
         catch (Exception e)
         {
