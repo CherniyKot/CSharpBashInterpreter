@@ -13,6 +13,8 @@ public class LsTests
         var tempFileName = Directory.GetCurrentDirectory();
         var testText = "";
 
+        foreach (var file in Directory.GetDirectories(tempFileName))
+            testText += Path.GetFileName(file) + "/" + Environment.NewLine;
         foreach (var file in Directory.GetFiles(tempFileName))
             testText += Path.GetFileName(file) + Environment.NewLine;
 
@@ -33,6 +35,8 @@ public class LsTests
         var tempFileName = Directory.GetCurrentDirectory();
         var testText = "";
 
+        foreach (var file in Directory.GetDirectories(tempFileName))
+            testText += Path.GetFileName(file) + "/" + Environment.NewLine;
         foreach (var file in Directory.GetFiles(tempFileName))
             testText += Path.GetFileName(file) + Environment.NewLine;
 
