@@ -26,7 +26,7 @@ public class LsCommandExecutable : BaseCommandExecutable
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);
             foreach (var dir in dirs)
             {
-                await outputStream.WriteLineAsync($"{Path.GetFileName(dir)}/");
+                await outputStream.WriteLineAsync(Path.GetFileName(dir) + "/");
             }
             foreach (var file in files)
             {
