@@ -20,7 +20,7 @@ public class LsCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
-            var path = $"{ConsoleState.CurrentDirectory}/{args.FirstOrDefault()}";
+            var path = args.Any() ? ConsoleState.ConvertPath(args.First()) : ConsoleState.CurrentDirectory;
             var attributes = File.GetAttributes(path);
             
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);
@@ -35,7 +35,7 @@ public class LsCommandExecutable : BaseCommandExecutable
             }
             else
             {
-                await outputStream.WriteLineAsync(args.First());
+                await outputStream.WriteLineAsync(path);
             }
             await outputStream.FlushAsync();
         }

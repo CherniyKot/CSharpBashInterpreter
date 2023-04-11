@@ -29,7 +29,7 @@ public class CatCommandExecutable : BaseCommandExecutable
                     }
                     else
                     {
-                        await using var fileStream = File.OpenRead(Path.Combine(ConsoleState.CurrentDirectory, fileName));
+                        await using var fileStream = File.OpenRead(ConsoleState.ConvertPath(fileName));
                         await StreamSet.CopyToAsync(fileStream, StreamSet.OutputStream);
                     }
             else

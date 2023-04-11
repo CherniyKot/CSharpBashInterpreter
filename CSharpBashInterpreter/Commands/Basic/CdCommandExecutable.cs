@@ -20,26 +20,8 @@ public class CdCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
-            string path;
-            if (args.Any())
-            {
-                var argPath = path = args.First();
-                var current = ConsoleState.CurrentDirectory;
-                path = argPath.StartsWith(Path.DirectorySeparatorChar) || argPath.StartsWith(Path.AltDirectorySeparatorChar)
-                    ? argPath : Path.Combine(current, argPath);
-    
-                if (!Path.Exists(path))
-                {
-                    var maybeFullPath = Path.GetFullPath(argPath);
-                    if (!Path.Exists(path))
-                        throw new ArgumentException($"Could not find path {path}");
-                    path = maybeFullPath;
-                }
-            }
-            else
-            {
-                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            }
+            var path = args.Any() ? ConsoleState.ConvertPath(args.First())
+                : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             ConsoleState.CurrentDirectory = path;
         }
         catch (Exception e)

@@ -25,7 +25,8 @@ public class WcTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             wcCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.TrimEnd().Should().Be(testResult);
+            var result = reader.ReadToEndAsync().Result.TrimEnd();
+            result.TrimEnd().Should().Be(testResult);
         }
         finally
         {

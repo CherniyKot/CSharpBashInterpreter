@@ -28,7 +28,7 @@ public class GrepCommandExecutable : BaseCommandExecutable
             if (!_parser(Tokens.Skip(1), out var flags))
                 return 1;
 
-            var files = await ReadFilesFromSystem(ConsoleState.CurrentDirectory, flags.FileNames);
+            var files = await ReadFilesFromSystem(ConsoleState, flags.FileNames);
             var matches = FormatMatchingLines(files, flags);
 
             await using var output = new StreamWriter(StreamSet.OutputStream);
@@ -47,10 +47,10 @@ public class GrepCommandExecutable : BaseCommandExecutable
         return 0;
     }
 
-    private static async Task<IList<FileData>> ReadFilesFromSystem(string currentDirectory, IEnumerable<string> fileNames) =>
+    private static async Task<IList<FileData>> ReadFilesFromSystem(ConsoleState consoleState, IEnumerable<string> fileNames) =>
         await Task.WhenAll(fileNames.Select(async fileName =>
         {
-            var lines = await File.ReadAllLinesAsync(Path.Combine(currentDirectory, fileName));
+            var lines = await File.ReadAllLinesAsync(consoleState.ConvertPath(fileName));
             return new FileData(fileName, lines.Select((str, i) => new Line(i + 1, str)));
         }));
 

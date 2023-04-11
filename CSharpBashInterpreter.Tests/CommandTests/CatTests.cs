@@ -8,7 +8,7 @@ namespace CSharpBashInterpreter.Tests.CommandTests;
 
 public class CatTests
 {
-    [Fact(Skip = "Testing off")]
+    [Fact]
     public void TestCatOnSingleFile()
     {
         var tempFileName = Path.GetTempFileName();
@@ -33,7 +33,7 @@ public class CatTests
         }
     }
 
-    [Fact(Skip = "Testing off")]
+    [Fact]
     public void TestCatOnMultipleFiles()
     {
         var tempFiles = new List<string> { "cat" };
