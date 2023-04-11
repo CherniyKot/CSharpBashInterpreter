@@ -7,7 +7,7 @@ public class ConsoleState
         CurrentDirectory = Directory.GetCurrentDirectory(),
     };
 
-    private string _currentDirectory;
+    private string _currentDirectory = string.Empty;
 
     public string CurrentDirectory
     {

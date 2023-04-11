@@ -2,6 +2,13 @@ using CSharpBashInterpreter.Commands.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+///     Executable for bash cd command
+///     Takes a list of tokens starting with "cd"
+///     Second token is relative path or absolute path (starts with DirectorySeparatorChar)
+///     If second token does not exist path is current path
+///     Consumes names of files in path
+/// </summary>
 public class CdCommandExecutable : BaseCommandExecutable
 {
     public CdCommandExecutable(IEnumerable<string> tokens) : base(tokens)
@@ -16,9 +23,18 @@ public class CdCommandExecutable : BaseCommandExecutable
             string path;
             if (args.Any())
             {
-                path = args.First();
-                var cur = ConsoleState.CurrentDirectory;
-                path = path.StartsWith("/") ? path : $"{cur}/{path}";
+                var argPath = path = args.First();
+                var current = ConsoleState.CurrentDirectory;
+                path = argPath.StartsWith(Path.DirectorySeparatorChar) || argPath.StartsWith(Path.AltDirectorySeparatorChar)
+                    ? argPath : Path.Combine(current, argPath);
+    
+                if (!Path.Exists(path))
+                {
+                    var maybeFullPath = Path.GetFullPath(argPath);
+                    if (!Path.Exists(path))
+                        throw new ArgumentException($"Could not find path {path}");
+                    path = maybeFullPath;
+                }
             }
             else
             {

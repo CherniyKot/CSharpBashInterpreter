@@ -23,7 +23,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
         foreach (var argument in Tokens.Skip(1))
             startInfo.ArgumentList.Add(argument);
 
-        foreach (var (key, value) in _context.EnvironmentVariables)
+        foreach (var (key, value) in _context.EnvironmentVariables.Internals)
             startInfo.EnvironmentVariables.Add(key, value);
 
         Process? process = null;
