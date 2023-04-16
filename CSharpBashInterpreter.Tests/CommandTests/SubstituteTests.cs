@@ -33,7 +33,7 @@ public class SubstituteTests
 
         _representation.CanBeParsed(tokens).Should().BeTrue();
         var command = _representation.Build(tokens, _context, Mock.Of<ICommandParser>());
-        var code = await command.ExecuteAsync(new StreamSet());
+        var code = await command.ExecuteAsync(new StreamSet(), ConsoleState.GetDefaultConsoleState());
         code.Should().Be(0);
 
         _context.EnvironmentVariables.Should().ContainKey(key);

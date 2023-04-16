@@ -5,6 +5,7 @@ using CSharpBashInterpreter.Commands.External;
 using CSharpBashInterpreter.Commands.Meta;
 using CSharpBashInterpreter.Semantics.Context;
 using CSharpBashInterpreter.Semantics.Parsing;
+using CSharpBashInterpreter.Utility;
 
 var tokenizer = new SpaceTokenizer();
 var contextManager = new DefaultContextManager();
@@ -14,6 +15,7 @@ var commandsParser = new DefaultCommandsParser
     {
         new CatCommandRepresentation(),
         new LsCommandRepresentation(),
+        new CdCommandRepresentation(),
         new EchoCommandRepresentation(),
         new PwdCommandRepresentation(),
         new WcCommandRepresentation(),
@@ -28,7 +30,8 @@ var commandsParser = new DefaultCommandsParser
     ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
 
-var interpreter = new ConsoleInterpreter(tokenizer, commandsParser, contextManager);
+var interpreter = new ConsoleInterpreter(tokenizer, commandsParser, contextManager,
+    ConsoleState.GetDefaultConsoleState());
 
 Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("Welcome to C# Bash Interpreter!\n");

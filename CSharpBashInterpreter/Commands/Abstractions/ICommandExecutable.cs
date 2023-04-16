@@ -11,6 +11,7 @@ public interface ICommandExecutable : IAsyncDisposable
     ///     Run command action
     /// </summary>
     /// <param name="streams">Stream set for command</param>
+    /// <param name="consoleState">Current console parameters</param>
     /// <returns></returns>
-    Task<int> ExecuteAsync(StreamSet streams);
+    Task<int> ExecuteAsync(StreamSet streams, ConsoleState consoleState);
 }

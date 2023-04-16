@@ -28,7 +28,7 @@ public class ContextTests
         context.EnvironmentVariables.Add(key, value);
 
         var newContext = _contextManager.GenerateContext();
-        newContext.EnvironmentVariables.Count.Should().Be(0);
+        newContext.EnvironmentVariables.Internals.Count.Should().Be(0);
         newContext.Should().NotBe(context);
     }
 

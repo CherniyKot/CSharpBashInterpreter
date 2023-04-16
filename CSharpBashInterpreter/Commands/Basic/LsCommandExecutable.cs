@@ -20,12 +20,22 @@ public class LsCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
-            var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
-            var files = Directory.GetFiles(path);
+            var path = args.Any() ? ConsoleState.ConvertPath(args.First()) : ConsoleState.CurrentDirectory;
+            var attributes = File.GetAttributes(path);
+            
             await using var outputStream = new StreamWriter(StreamSet.OutputStream);
-            foreach (var file in files)
+            if (attributes.HasFlag(FileAttributes.Directory))
             {
-                await outputStream.WriteLineAsync(Path.GetFileName(file));
+                var dirs = Directory.GetDirectories(path);
+                foreach (var dir in dirs)
+                    await outputStream.WriteLineAsync($"{Path.GetFileName(dir)}{Path.DirectorySeparatorChar}");
+                var files = Directory.GetFiles(path);
+                foreach (var file in files)
+                    await outputStream.WriteLineAsync(Path.GetFileName(file));
+            }
+            else
+            {
+                await outputStream.WriteLineAsync(path);
             }
             await outputStream.FlushAsync();
         }

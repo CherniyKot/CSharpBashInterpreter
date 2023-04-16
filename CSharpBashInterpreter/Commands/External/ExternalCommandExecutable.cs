@@ -19,11 +19,12 @@ public class ExternalCommandExecutable : BaseCommandExecutable
     protected override async Task<int> ExecuteInternalAsync()
     {
         var startInfo = new ProcessStartInfo(Tokens.First());
+        startInfo.WorkingDirectory = ConsoleState.CurrentDirectory;
 
         foreach (var argument in Tokens.Skip(1))
             startInfo.ArgumentList.Add(argument);
 
-        foreach (var (key, value) in _context.EnvironmentVariables)
+        foreach (var (key, value) in _context.EnvironmentVariables.Internals)
             startInfo.EnvironmentVariables.Add(key, value);
 
         Process? process = null;

@@ -26,7 +26,7 @@ public class GrepTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            grepCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().StartWith("1:"+testText.Split(Environment.NewLine).First());
         }
         finally
@@ -53,7 +53,7 @@ public class GrepTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            grepCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().Contain("3:"+testParagraphs[2]);
         }
         finally
@@ -87,7 +87,7 @@ public class GrepTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            grepCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             reader.ReadToEndAsync().Result.Should().ContainAll(testWord, testWord.ToLower(), testWord.ToUpper());
         }
         finally
@@ -114,7 +114,7 @@ public class GrepTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
+            grepCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
             var result =reader.ReadToEndAsync().Result;
             result.Should().NotContainAny(testWord + testWord + testWord, testWord + testWord);
             result.Should().Contain(testWord);
@@ -147,8 +147,8 @@ public class GrepTests
             {
                 OutputStream = pipe.Writer.AsStream(),
             };
-            grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            var result =reader.ReadToEndAsync().Result;
+            grepCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(0);
+            var result = reader.ReadToEndAsync().Result;
             result.Should().NotContainAny("5:","6:","7:");
             result.Should().ContainAll("1:","2:","3:","4:");
             result.Should().NotMatch("12:*12:");

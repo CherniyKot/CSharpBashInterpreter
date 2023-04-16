@@ -4,6 +4,14 @@ using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+///     Executable for bash grep command
+///     Takes a list of tokens and few arguments starting with "grep"
+///     Second token is path
+///     Without arguments processes strings from input stream as input
+///     Arguments are interpreted as list of files
+///     Flags provides <see cref="GrepFlagsOptions"/>  
+/// </summary>
 public class GrepCommandExecutable : BaseCommandExecutable
 {
     private readonly TryParseFunction<GrepFlagsOptions> _parser;
@@ -20,7 +28,7 @@ public class GrepCommandExecutable : BaseCommandExecutable
             if (!_parser(Tokens.Skip(1), out var flags))
                 return 1;
 
-            var files = await ReadFilesFromSystem(flags.FileNames);
+            var files = await ReadFilesFromSystem(ConsoleState, flags.FileNames);
             var matches = FormatMatchingLines(files, flags);
 
             await using var output = new StreamWriter(StreamSet.OutputStream);
@@ -39,10 +47,10 @@ public class GrepCommandExecutable : BaseCommandExecutable
         return 0;
     }
 
-    private static async Task<IList<FileData>> ReadFilesFromSystem(IEnumerable<string> fileNames) =>
+    private static async Task<IList<FileData>> ReadFilesFromSystem(ConsoleState consoleState, IEnumerable<string> fileNames) =>
         await Task.WhenAll(fileNames.Select(async fileName =>
         {
-            var lines = await File.ReadAllLinesAsync(fileName);
+            var lines = await File.ReadAllLinesAsync(consoleState.ConvertPath(fileName));
             return new FileData(fileName, lines.Select((str, i) => new Line(i + 1, str)));
         }));
 

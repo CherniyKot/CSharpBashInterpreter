@@ -4,6 +4,9 @@ using CSharpBashInterpreter.Commands.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+///     Representation and parsing arguments for bash grep command
+/// </summary>
 public class GrepCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "grep";

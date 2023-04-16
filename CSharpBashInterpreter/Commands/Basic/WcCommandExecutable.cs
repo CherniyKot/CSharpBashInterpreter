@@ -26,12 +26,15 @@ public class WcCommandExecutable : BaseCommandExecutable
             long totalBytes = 0;
             foreach (var fileName in args)
             {
+                var filePath = ConsoleState.ConvertPath(fileName);
+                var fileInfo = new FileInfo(filePath);
+                
                 long lines = 0;
                 long words = 0;
-                var bytes = new FileInfo(fileName).Length;
+                var bytes = fileInfo.Length;
                 try
                 {
-                    using var fileStream = File.OpenText(fileName);
+                    using var fileStream = fileInfo.OpenText();
 
                     while (!fileStream.EndOfStream)
                     {
@@ -43,7 +46,7 @@ public class WcCommandExecutable : BaseCommandExecutable
                     totalLines += lines;
                     totalBytes += bytes;
                     totalWords += words;
-                    await outputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
+                    await outputStream.WriteLineAsync($"{lines} {words} {bytes} {filePath}");
                 }
                 catch (Exception e)
                 {

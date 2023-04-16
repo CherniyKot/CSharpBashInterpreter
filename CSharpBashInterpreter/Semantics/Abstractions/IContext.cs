@@ -5,8 +5,10 @@
 /// </summary>
 public interface IContext
 {
-    /// <summary>
-    ///     Provide interface for collection of environment variables
-    /// </summary>
-    IDictionary<string, string> EnvironmentVariables { get; }
+    public interface IVariablesHandler : IDictionary<string, string>
+    {
+        public IDictionary<string, string> Internals { get; }
+    }
+    
+    IVariablesHandler EnvironmentVariables { get; }
 }

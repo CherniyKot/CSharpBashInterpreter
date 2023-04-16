@@ -31,8 +31,8 @@ public class PipeCommandExecutable : BaseCommandExecutable
             OutputStream = StreamSet.OutputStream
         };
 
-        var leftTask = await _left.ExecuteAsync(leftStreams);
-        var rightTask = await _right.ExecuteAsync(rightStreams);
+        var leftTask = await _left.ExecuteAsync(leftStreams, ConsoleState);
+        var rightTask = await _right.ExecuteAsync(rightStreams, ConsoleState);
 
         return leftTask == 0 ? rightTask : leftTask;
     }
