@@ -20,8 +20,15 @@ public class CdCommandExecutable : BaseCommandExecutable
         var args = Tokens.Skip(1).ToList();
         try
         {
+            if (args.Count > 1)
+                throw new ArgumentException("Too many arguments");
+            
             var path = args.Any() ? ConsoleState.ConvertPath(args.First())
                 : Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            if (!Directory.Exists(path))
+                throw new IOException("Received path isn't a directory");
+            
             ConsoleState.CurrentDirectory = path;
         }
         catch (Exception e)

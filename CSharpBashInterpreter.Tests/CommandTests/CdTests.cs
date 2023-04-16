@@ -135,4 +135,18 @@ public class CdTests
         File.Delete(tempFilePath.FullName);
         exitCode.Should().Be(1);
     }
+    
+    [Fact]
+    public void TestCdWithManyArguments()
+    {
+        var cdCommandExecutable = new CdCommandExecutable(new[] { "cd", "temp", "temp" });
+        var pipe = new Pipe();
+        using var reader = new StreamReader(pipe.Reader.AsStream());
+        var streams = new StreamSet
+        {
+            OutputStream = pipe.Writer.AsStream(),
+        };
+        
+        cdCommandExecutable.ExecuteAsync(streams, ConsoleState.GetDefaultConsoleState()).Result.Should().Be(1);
+    }
 }
