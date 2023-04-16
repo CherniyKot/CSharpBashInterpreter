@@ -84,9 +84,9 @@ public class CdTests
     [Fact]
     public void TestCdWithAbsolutePath()
     {
-        var tempDirInfo = Directory.CreateDirectory(Path.Combine("/", Path.GetRandomFileName()));
+        var absoluteDirectory = new DirectoryInfo("/");
 
-        var cdCommandExecutable = new CdCommandExecutable(new[] { "cd", $"/{tempDirInfo.Name}" });
+        var cdCommandExecutable = new CdCommandExecutable(new[] { "cd", "/" });
         var pipe = new Pipe();
         using var reader = new StreamReader(pipe.Reader.AsStream());
         var consoleState = ConsoleState.GetDefaultConsoleState();
@@ -96,11 +96,10 @@ public class CdTests
         };
         
         var result = cdCommandExecutable.ExecuteAsync(streams, consoleState).Result;
-        Directory.Delete(tempDirInfo.FullName);
         result.Should().Be(0);
         reader.ReadToEndAsync().Result.Should().Be("");
         
-        consoleState.CurrentDirectory.Should().Be(tempDirInfo.FullName);
+        consoleState.CurrentDirectory.Should().Be(absoluteDirectory.FullName);
     }
     
     [Fact]
