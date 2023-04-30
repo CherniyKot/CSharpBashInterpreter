@@ -3,14 +3,13 @@
 namespace CSharpBashInterpreter.Commands.Abstractions;
 
 /// <summary>
-///     Command runtime executable with built arguments
+/// Command runtime executable with built arguments
 /// </summary>
-public interface ICommandExecutable : IAsyncDisposable
+public interface ICommandExecutable
 {
     /// <summary>
-    ///     Run command action
+    /// Run command action
     /// </summary>
     /// <param name="streams">Stream set for command</param>
-    /// <returns></returns>
     Task<int> ExecuteAsync(StreamSet streams);
 }

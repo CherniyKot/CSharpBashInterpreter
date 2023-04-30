@@ -25,7 +25,7 @@ public class CatTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(testText);
+            reader.ReadToEndAsync().Result.Should().Be(testText + Environment.NewLine);
         }
         finally
         {
@@ -56,7 +56,7 @@ public class CatTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             catCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
+            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts) + Environment.NewLine);
         }
         finally
         {

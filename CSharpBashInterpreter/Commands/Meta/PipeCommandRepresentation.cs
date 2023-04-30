@@ -3,6 +3,9 @@ using CSharpBashInterpreter.Semantics.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
+/// <summary>
+/// Representation for bash pipes functionality
+/// </summary>
 public class PipeCommandRepresentation : IMetaCommandRepresentation
 {
     private readonly string _delimiter = "|";

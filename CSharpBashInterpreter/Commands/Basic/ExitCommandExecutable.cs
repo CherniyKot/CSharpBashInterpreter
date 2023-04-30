@@ -1,10 +1,11 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for exit command
-///     exits the process with specified exit code (0 by default)
+/// Executable for exit command
+/// exits the process with specified exit code (0 by default)
 /// </summary>
 public class ExitCommandExecutable : BaseCommandExecutable
 {
@@ -12,7 +13,7 @@ public class ExitCommandExecutable : BaseCommandExecutable
     {
     }
 
-    protected override Task<int> ExecuteInternalAsync()
+    protected override Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         Environment.Exit(Tokens.Length > 1 ? int.Parse(Tokens[1]) : 0);
         return Task.FromResult(0);

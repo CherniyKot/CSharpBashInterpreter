@@ -1,5 +1,6 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
@@ -15,7 +16,7 @@ public class ContextSetCommandExecutable : BaseCommandExecutable
         _context = context;
     }
 
-    protected override Task<int> ExecuteInternalAsync()
+    protected override Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         _context.EnvironmentVariables[Tokens[0]] = Tokens[2];
         return Task.FromResult(0);

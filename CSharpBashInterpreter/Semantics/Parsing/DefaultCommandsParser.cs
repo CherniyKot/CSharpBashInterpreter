@@ -10,17 +10,17 @@ namespace CSharpBashInterpreter.Semantics.Parsing;
 public class DefaultCommandsParser : ICommandParser
 {
     /// <summary>
-    ///     Commands for additional processing input tokens
+    /// Commands for additional processing input tokens
     /// </summary>
     public required IMetaCommandRepresentation[] MetaCommands { get; init; }
 
     /// <summary>
-    ///     Basic commands for executing
+    /// Basic commands for executing
     /// </summary>
     public required ICommandRepresentation[] Commands { get; init; }
 
     /// <summary>
-    ///     Command for OS process calls
+    /// Command for OS process calls
     /// </summary>
     public IExternalCommandRepresentation? ExternalCommandRepresentation { get; init; }
 

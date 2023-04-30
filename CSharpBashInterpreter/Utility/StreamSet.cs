@@ -51,6 +51,7 @@ public class StreamSet : IAsyncDisposable
         }
         catch (Exception e) when (e is InvalidOperationException or NotSupportedException)
         {
+            throw;
         }
         finally
         {

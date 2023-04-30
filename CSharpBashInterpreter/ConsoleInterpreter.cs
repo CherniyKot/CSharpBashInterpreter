@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Semantics.Context;
 using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter;
@@ -7,14 +8,12 @@ namespace CSharpBashInterpreter;
 public sealed class ConsoleInterpreter
 {
     private readonly ICommandParser _commandParser;
-    private readonly IContextManager _contextManager;
     private readonly ITokenizer _tokenizer;
 
-    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser, IContextManager contextManager)
+    public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser)
     {
         _tokenizer = tokenizer;
         _commandParser = commandParser;
-        _contextManager = contextManager;
 
         Console.OutputEncoding = Encoding.UTF8;
     }
@@ -23,7 +22,7 @@ public sealed class ConsoleInterpreter
     {
         Console.CancelKeyPress += ConsoleCancelEventHandler;
 
-        var context = _contextManager.GenerateContext();
+        var context = new DefaultContext();
 
         while (!token.IsCancellationRequested)
             await ExecuteLoop(context);
@@ -37,12 +36,13 @@ public sealed class ConsoleInterpreter
         try
         {
             var line = Console.ReadLine() ?? "";
-            var substituteLine = _contextManager.SubstituteVariablesInText(line, context);
+            var substituteLine = context.SubstituteVariablesInText(line);
             var tokens = _tokenizer.Tokenize(substituteLine);
             if (tokens.Length == 0)
                 return;
-            await using var command = _commandParser.Parse(tokens, context);
-            var result = await command.ExecuteAsync(new StreamSet());
+            var command = _commandParser.Parse(tokens, context);
+            await using var ioStreams = new StreamSet();
+            var result = await command.ExecuteAsync(ioStreams);
             if (result != 0)
                 PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");
         }

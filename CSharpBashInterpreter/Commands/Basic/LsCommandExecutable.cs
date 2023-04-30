@@ -1,13 +1,14 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for bash ls command
-///     Takes a list of tokens starting with "ls"
-///     Second token is path
-///     If second token does not exist path is current path
-///     Consumes names of files in path
+/// Executable for bash ls command
+/// Takes a list of tokens starting with "ls"
+/// Second token is path
+/// If second token does not exist path is current path
+/// Consumes names of files in path
 /// </summary>
 public class LsCommandExecutable : BaseCommandExecutable
 {
@@ -15,14 +16,14 @@ public class LsCommandExecutable : BaseCommandExecutable
     {
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var args = Tokens.Skip(1).ToList();
         try
         {
             var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
             var files = Directory.GetFiles(path);
-            await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+            await using var outputStream = new StreamWriter(streamSet.OutputStream);
             foreach (var file in files)
             {
                 await outputStream.WriteLineAsync(Path.GetFileName(file));
@@ -31,7 +32,7 @@ public class LsCommandExecutable : BaseCommandExecutable
         }
         catch (Exception e)
         {
-            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
             await errorStream.WriteLineAsync(e.Message);
             await errorStream.FlushAsync();
             return 1;
