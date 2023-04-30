@@ -13,7 +13,7 @@ public class GrepCommandExecutable : BaseCommandExecutable
         _parser = parser;
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         try
         {
@@ -23,13 +23,13 @@ public class GrepCommandExecutable : BaseCommandExecutable
             var files = await ReadFilesFromSystem(flags.FileNames);
             var matches = FormatMatchingLines(files, flags);
 
-            await using var output = new StreamWriter(StreamSet.OutputStream);
+            await using var output = new StreamWriter(streamSet.OutputStream);
             await output.WriteLineAsync(matches);
             await output.FlushAsync();
         }
         catch (Exception exception)
         {
-            await using var output = new StreamWriter(StreamSet.ErrorStream);
+            await using var output = new StreamWriter(streamSet.ErrorStream);
             await output.WriteLineAsync(exception.Message);
             await output.FlushAsync();
 
