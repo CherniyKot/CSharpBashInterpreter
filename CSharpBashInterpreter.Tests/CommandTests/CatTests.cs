@@ -9,7 +9,7 @@ public class CatTests
     [Fact]
     public void TestCatOnSingleFile()
     {
-        var tempFileName = System.IO.Path.GetTempFileName();
+        var tempFileName = Path.GetTempFileName();
         try
         {
             var testText = Faker.Lorem.Paragraph();
@@ -17,13 +17,11 @@ public class CatTests
 
             var catCommandExecutable = new CatCommandExecutable(new[] { "cat", tempFileName });
             var pipe = new Pipe();
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                catCommandExecutable.OutputStream = writer;
-                catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(testText);
-            }
+            using var writer = new StreamWriter(pipe.Writer.AsStream());
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            catCommandExecutable.OutputStream = writer;
+            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(testText);
         }
         finally
         {
@@ -36,25 +34,23 @@ public class CatTests
     {
         var tempFiles = new List<string>() { "cat" };
         var testTexts = new List<string>();
-        for (int i = 0; i < 10; i++)
+        for (var i = 0; i < 10; i++)
         {
             tempFiles.Add(System.IO.Path.GetTempFileName());
             testTexts.Add(Faker.Lorem.Paragraph());
             File.WriteAllText(tempFiles.Last(), testTexts.Last());
         }
-        
+
         try
         {
             var catCommandExecutable = new CatCommandExecutable(tempFiles);
             var pipe = new Pipe();
 
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                catCommandExecutable.OutputStream = writer;
-                catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
-            }
+            using var writer = new StreamWriter(pipe.Writer.AsStream());
+            using var reader = new StreamReader(pipe.Reader.AsStream());
+            catCommandExecutable.OutputStream = writer;
+            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
         }
         finally
         {
@@ -70,18 +66,16 @@ public class CatTests
         var pipeInput = new Pipe();
         var pipeOutput = new Pipe();
 
-        using (var writerInput = new StreamWriter(pipeInput.Writer.AsStream()))
-        using (var readerInput = new StreamReader(pipeInput.Reader.AsStream()))
-        using (var writerOutput = new StreamWriter(pipeOutput.Writer.AsStream()))
-        using (var readerOutput = new StreamReader(pipeOutput.Reader.AsStream()))
-        {
-            catCommandExecutable.InputStream = readerInput;
-            catCommandExecutable.OutputStream = writerOutput;
-            catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+        using var writerInput = new StreamWriter(pipeInput.Writer.AsStream());
+        using var readerInput = new StreamReader(pipeInput.Reader.AsStream());
+        using var writerOutput = new StreamWriter(pipeOutput.Writer.AsStream());
+        using var readerOutput = new StreamReader(pipeOutput.Reader.AsStream());
+        catCommandExecutable.InputStream = readerInput;
+        catCommandExecutable.OutputStream = writerOutput;
+        catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
 
-            writerInput.WriteLine(testText);
-            writerInput.Close();
-            readerOutput.ReadToEndAsync().Result.Should().Be(testText);
-        }
+        writerInput.WriteLine(testText);
+        writerInput.Close();
+        readerOutput.ReadToEndAsync().Result.Should().Be(testText);
     }
 }

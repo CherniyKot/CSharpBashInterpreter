@@ -12,7 +12,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
 
     protected override async Task<int> ExecuteInternalAsync()
     {
-        var process = Process.Start(Tokens.First(),Tokens.Skip(1));
+        var process = Process.Start(Tokens.First(), Tokens.Skip(1));
         await process.WaitForExitAsync();
         return process.ExitCode;
     }

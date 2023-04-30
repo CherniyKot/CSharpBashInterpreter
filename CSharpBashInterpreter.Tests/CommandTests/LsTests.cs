@@ -2,52 +2,51 @@
 using System.IO.Pipelines;
 using CSharpBashInterpreter.Commands.Basic;
 
-namespace CSharpBashInterpreter.Tests.CommandTests
+namespace CSharpBashInterpreter.Tests.CommandTests;
+
+public class LsTests
 {
-    public class LsTests
+    [Fact]
+    public void TestLs()
     {
-        [Fact]
-        public void TestLs()
+        var tempFileName = Directory.GetCurrentDirectory();
+        var testText = "";
+
+        foreach (var file in Directory.GetFiles(tempFileName))
         {
-            var tempFileName = System.IO.Directory.GetCurrentDirectory();
-            var testText = "";
-
-            foreach (var file in Directory.GetFiles(tempFileName))
-            {
-                testText += Path.GetFileName(file) + '\n';
-            }
-
-            var lsCommandExecutable = new LsCommandExecutable(new[] { "ls" });
-            var pipe = new Pipe();
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                lsCommandExecutable.OutputStream = writer;
-                lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(testText);
-            }
+            testText += Path.GetFileName(file) + '\n';
         }
 
-        [Fact]
-        public void TestLsWithDir()
+        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls" });
+        var pipe = new Pipe();
+        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
+        using (var reader = new StreamReader(pipe.Reader.AsStream()))
         {
-            var tempFileName = System.IO.Directory.GetCurrentDirectory();
-            var testText = "";
+            lsCommandExecutable.OutputStream = writer;
+            lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(testText);
+        }
+    }
 
-            foreach (var file in Directory.GetFiles(tempFileName))
-            {
-                testText += Path.GetFileName(file) + '\n';
-            }
+    [Fact]
+    public void TestLsWithDir()
+    {
+        var tempFileName = Directory.GetCurrentDirectory();
+        var testText = "";
 
-            var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName });
-            var pipe = new Pipe();
-            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-            using (var reader = new StreamReader(pipe.Reader.AsStream()))
-            {
-                lsCommandExecutable.OutputStream = writer;
-                lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                reader.ReadToEndAsync().Result.Should().Be(testText);
-            }
+        foreach (var file in Directory.GetFiles(tempFileName))
+        {
+            testText += Path.GetFileName(file) + '\n';
+        }
+
+        var lsCommandExecutable = new LsCommandExecutable(new[] { "ls", tempFileName });
+        var pipe = new Pipe();
+        using (var writer = new StreamWriter(pipe.Writer.AsStream()))
+        using (var reader = new StreamReader(pipe.Reader.AsStream()))
+        {
+            lsCommandExecutable.OutputStream = writer;
+            lsCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+            reader.ReadToEndAsync().Result.Should().Be(testText);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace CSharpBashInterpreter.Commands.Basic;
 
-
 /// <summary>
 /// Executable for bash echo command
 /// Takes list of 2 tokens: "echo" and string

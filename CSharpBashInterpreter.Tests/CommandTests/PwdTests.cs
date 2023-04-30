@@ -9,21 +9,14 @@ namespace CSharpBashInterpreter.Tests.CommandTests
         [Fact]
         public void TestPwd()
         {
-            try
+            var pwdCommandExecutable = new PwdCommandExecutable(new[] { "pwd" });
+            var pipe = new Pipe();
+            using (var writer = new StreamWriter(pipe.Writer.AsStream()))
+            using (var reader = new StreamReader(pipe.Reader.AsStream()))
             {
-                var pwdCommandExecutable = new PwdCommandExecutable(new[] { "pwd" });
-                var pipe = new Pipe();
-                using (var writer = new StreamWriter(pipe.Writer.AsStream()))
-                using (var reader = new StreamReader(pipe.Reader.AsStream()))
-                {
-                    pwdCommandExecutable.OutputStream = writer;
-                    pwdCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-                    reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
-                }
-            }
-            finally
-            {
-
+                pwdCommandExecutable.OutputStream = writer;
+                pwdCommandExecutable.ExecuteAsync().Result.Should().Be(0);
+                reader.ReadToEndAsync().Result.Trim().Should().Be(Directory.GetCurrentDirectory());
             }
         }
     }
