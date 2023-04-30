@@ -3,9 +3,9 @@
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for bash pwd command
-///     Takes list of 1 token "pwd"
-///     Returns current directory
+/// Executable for bash pwd command
+/// Takes list of 1 token "pwd"
+/// Returns current directory
 /// </summary>
 public class PwdCommandExecutable : BaseCommandExecutable
 {

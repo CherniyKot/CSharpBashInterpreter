@@ -3,11 +3,11 @@
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for bash wc command
-///     Takes list of tokens starting with "wc" and processes the rest of them as arguments
-///     Without arguments processes strings from input stream as input
-///     Arguments are interpreted as list of files
-///     Counts number of lines, words, bytes in input and writes it to the output stream
+/// Executable for bash wc command
+/// Takes list of tokens starting with "wc" and processes the rest of them as arguments
+/// Without arguments processes strings from input stream as input
+/// Arguments are interpreted as list of files
+/// Counts number of lines, words, bytes in input and writes it to the output stream
 /// </summary>
 public class WcCommandExecutable : BaseCommandExecutable
 {

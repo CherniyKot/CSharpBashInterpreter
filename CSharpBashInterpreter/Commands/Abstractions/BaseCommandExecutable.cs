@@ -3,16 +3,14 @@
 namespace CSharpBashInterpreter.Commands.Abstractions;
 
 /// <summary>
-///     Base class with boilerplate for command executables
+/// Base class with boilerplate for command executables
 /// </summary>
 public abstract class BaseCommandExecutable : ICommandExecutable
 {
     protected readonly string[] Tokens;
 
-    protected BaseCommandExecutable(IEnumerable<string> tokens)
-    {
+    protected BaseCommandExecutable(IEnumerable<string> tokens) =>
         Tokens = tokens.ToArray();
-    }
 
     protected StreamSet StreamSet { get; private set; } = null!;
 

@@ -3,11 +3,11 @@
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for bash ls command
-///     Takes a list of tokens starting with "ls"
-///     Second token is path
-///     If second token does not exist path is current path
-///     Consumes names of files in path
+/// Executable for bash ls command
+/// Takes a list of tokens starting with "ls"
+/// Second token is path
+/// If second token does not exist path is current path
+/// Consumes names of files in path
 /// </summary>
 public class LsCommandExecutable : BaseCommandExecutable
 {

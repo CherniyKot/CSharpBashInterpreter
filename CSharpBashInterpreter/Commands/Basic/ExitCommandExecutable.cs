@@ -3,8 +3,8 @@
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for exit command
-///     exits the process with specified exit code (0 by default)
+/// Executable for exit command
+/// exits the process with specified exit code (0 by default)
 /// </summary>
 public class ExitCommandExecutable : BaseCommandExecutable
 {

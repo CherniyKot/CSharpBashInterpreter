@@ -3,9 +3,9 @@
 namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
-///     Executable for bash echo command
-///     Takes list of 2 tokens: "echo" and string
-///     sends string to the output stream
+/// Executable for bash echo command
+/// Takes list of 2 tokens: "echo" and string
+/// sends string to the output stream
 /// </summary>
 public class EchoCommandExecutable : BaseCommandExecutable
 {
