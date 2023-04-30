@@ -1,4 +1,7 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
 /// Executable for exit command
@@ -7,9 +10,10 @@
 public class ExitCommandExecutable : BaseCommandExecutable
 {
     public ExitCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    {
+    }
 
-    protected override Task<int> ExecuteInternalAsync()
+    protected override Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         Environment.Exit(Tokens.Length > 1 ? int.Parse(Tokens[1]) : 0);
         return Task.FromResult(0);

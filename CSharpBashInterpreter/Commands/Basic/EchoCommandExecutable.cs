@@ -1,4 +1,7 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
 /// Executable for bash echo command
@@ -8,22 +11,26 @@
 public class EchoCommandExecutable : BaseCommandExecutable
 {
     public EchoCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    {
+    }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         try
         {
             var concatArgs = string.Join(' ', Tokens.Skip(1));
-            await OutputStream.WriteLineAsync(concatArgs);
-            await OutputStream.FlushAsync();
+            await using var outputStream = new StreamWriter(streamSet.OutputStream);
+            await outputStream.WriteLineAsync(concatArgs);
+            await outputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await ErrorStream.WriteLineAsync(e.Message);
-            await ErrorStream.FlushAsync();
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
             return 1;
         }
+
         return 0;
     }
 }

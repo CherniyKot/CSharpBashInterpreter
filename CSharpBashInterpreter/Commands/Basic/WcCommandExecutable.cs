@@ -1,6 +1,5 @@
-﻿using System.IO;
-using System.IO.Pipes;
-using System.Text;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -13,15 +12,14 @@ namespace CSharpBashInterpreter.Commands.Basic;
 /// </summary>
 public class WcCommandExecutable : BaseCommandExecutable
 {
-    private const int BufferSize = 256;
-    private readonly char[] _buffer = new char[BufferSize];
-
     public WcCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
+    {
+    }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var args = Tokens.Skip(1).ToList();
+        await using var outputStream = new StreamWriter(streamSet.OutputStream);
         if (args.Any())
         {
             long totalLines = 0;
@@ -31,16 +29,14 @@ public class WcCommandExecutable : BaseCommandExecutable
             {
                 long lines = 0;
                 long words = 0;
-                long bytes = new FileInfo(fileName).Length;
+                var bytes = new FileInfo(fileName).Length;
                 try
                 {
                     using var fileStream = File.OpenText(fileName);
 
                     while (!fileStream.EndOfStream)
                     {
-                        var s = await fileStream.ReadLineAsync();
-                        if (string.IsNullOrEmpty(s)) continue;
-
+                        var s = await fileStream.ReadLineAsync()??"";
                         lines++;
                         words += s.Split().Length;
                     }
@@ -48,50 +44,47 @@ public class WcCommandExecutable : BaseCommandExecutable
                     totalLines += lines;
                     totalBytes += bytes;
                     totalWords += words;
-                    await OutputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
+                    await outputStream.WriteLineAsync($"{lines} {words} {bytes} {fileName}");
                 }
                 catch (Exception e)
                 {
-                    await ErrorStream.WriteLineAsync(e.Message);
-                    await ErrorStream.FlushAsync();
+                    await using var errorStream = new StreamWriter(streamSet.ErrorStream);
+                    await errorStream.WriteLineAsync(e.Message);
+                    await errorStream.FlushAsync();
                     return 1;
                 }
             }
 
             if (args.Count > 1)
-            {
-                await OutputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
-            }
-
+                await outputStream.WriteLineAsync($"{totalLines} {totalWords} {totalBytes} Total");
         }
         else
         {
+            using var inputStream = new StreamReader(streamSet.InputStream);
             try
             {
-                int lines = 0;
-                int words = 0;
-                int bytes = 0;
-                var encoding = InputStream.CurrentEncoding;
-                while (InputStream.BaseStream.CanRead)
+                var lines = 0;
+                var words = 0;
+                var bytes = 0;
+                var encoding = inputStream.CurrentEncoding;
+                while (streamSet.InputStream.CanRead)
                 {
-                    var s = await InputStream.ReadLineAsync();
-                    if (string.IsNullOrEmpty(s)) continue;
-
+                    var result = await inputStream.ReadLineAsync() ?? "";
                     lines++;
-                    words += s.Split().Length;
-                    bytes += encoding.GetByteCount(s+ Environment.NewLine);
+                    words += result.Split().Length;
+                    bytes += encoding.GetByteCount(result + Environment.NewLine);
                 }
-                await OutputStream.WriteLineAsync($"{lines} {words} {bytes}");
+
+                await outputStream.WriteLineAsync($"{lines} {words} {bytes}");
             }
             catch (Exception e)
             {
-                await ErrorStream.WriteLineAsync(e.Message);
-                await ErrorStream.FlushAsync();
+                await using var errorStream = new StreamWriter(streamSet.ErrorStream);
+                await errorStream.WriteLineAsync(e.Message);
+                await errorStream.FlushAsync();
                 return 1;
             }
         }
-
-        await OutputStream.DisposeAsync();
         return 0;
     }
 }

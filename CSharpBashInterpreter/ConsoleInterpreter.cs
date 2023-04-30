@@ -1,19 +1,21 @@
-﻿using CSharpBashInterpreter.Commands.Meta.Utility;
-using CSharpBashInterpreter.Semantics;
+﻿using System.Text;
+using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Semantics.Context;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter;
 
 public sealed class ConsoleInterpreter
 {
-    private readonly ITokenizer _tokenizer;
     private readonly ICommandParser _commandParser;
+    private readonly ITokenizer _tokenizer;
 
     public ConsoleInterpreter(ITokenizer tokenizer, ICommandParser commandParser)
     {
         _tokenizer = tokenizer;
         _commandParser = commandParser;
 
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
     }
 
     public async Task Execute(CancellationToken token)
@@ -30,14 +32,17 @@ public sealed class ConsoleInterpreter
 
     private async Task ExecuteLoop(IContext context)
     {
+        Console.Write($"[{DateTime.Now.ToShortTimeString()}] SharpBash> ");
         try
         {
             var line = Console.ReadLine() ?? "";
-            var tokens = _tokenizer.Tokenize(line);
+            var substituteLine = context.SubstituteVariablesInText(line);
+            var tokens = _tokenizer.Tokenize(substituteLine);
             if (tokens.Length == 0)
                 return;
-            await using var command = _commandParser.Parse(tokens, context);
-            var result = await command.ExecuteAsync();
+            var command = _commandParser.Parse(tokens, context);
+            await using var ioStreams = new StreamSet();
+            var result = await command.ExecuteAsync(ioStreams);
             if (result != 0)
                 PrintErrorToConsole($"Команда завершилась с кодом ошибки {result}.");
         }

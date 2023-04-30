@@ -1,11 +1,13 @@
 ﻿using CSharpBashInterpreter;
-using CSharpBashInterpreter.Commands;
 using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Commands.Basic;
-using CSharpBashInterpreter.Semantics;
+using CSharpBashInterpreter.Commands.External;
+using CSharpBashInterpreter.Commands.Meta;
+using CSharpBashInterpreter.Semantics.Context;
+using CSharpBashInterpreter.Semantics.Parsing;
 
 var tokenizer = new SpaceTokenizer();
-var commandsParser = new DefaultCommandsParser()
+var commandsParser = new DefaultCommandsParser
 {
     Commands = new ICommandRepresentation[]
     {
@@ -16,7 +18,11 @@ var commandsParser = new DefaultCommandsParser()
         new WcCommandRepresentation(),
         new ExitCommandRepresentation()
     },
-    MetaCommands = new IMetaCommandRepresentation[] { },
+    MetaCommands = new IMetaCommandRepresentation[]
+    {
+        new ContextSetCommandRepresentation(),
+        new PipeCommandRepresentation()
+    },
     ExternalCommandRepresentation = new ExternalCommandRepresentation()
 };
 
@@ -28,4 +34,3 @@ Console.ResetColor();
 
 var tokenSource = new CancellationTokenSource();
 await interpreter.Execute(tokenSource.Token);
-

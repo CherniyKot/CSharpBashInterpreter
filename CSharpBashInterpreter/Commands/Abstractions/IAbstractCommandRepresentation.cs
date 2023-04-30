@@ -3,13 +3,11 @@
 /// <summary>
 /// Base abstraction of command information
 /// </summary>
-/// <typeparam name="TInput"></typeparam>
-public interface IAbstractCommandRepresentation<in TInput>
+public interface IAbstractCommandRepresentation
 {
     /// <summary>
     /// Check if input tokens can be processed by command
     /// </summary>
-    /// <param name="data"></param>
-    /// <returns></returns>
-    bool CanBeParsed(TInput data);
+    /// <param name="data">Parsed tokens from console</param>
+    bool CanBeParsed(IEnumerable<string> data);
 }

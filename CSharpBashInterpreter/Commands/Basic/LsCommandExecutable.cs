@@ -1,4 +1,7 @@
-﻿namespace CSharpBashInterpreter.Commands.Basic;
+﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
+
+namespace CSharpBashInterpreter.Commands.Basic;
 
 /// <summary>
 /// Executable for bash ls command
@@ -10,27 +13,31 @@
 public class LsCommandExecutable : BaseCommandExecutable
 {
     public LsCommandExecutable(IEnumerable<string> tokens) : base(tokens)
-    { }
-
-    protected override async Task<int> ExecuteInternalAsync()
     {
-        var args = Tokens.Skip(1);
+    }
+
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
+    {
+        var args = Tokens.Skip(1).ToList();
         try
         {
             var path = args.Any() ? args.First() : Directory.GetCurrentDirectory();
             var files = Directory.GetFiles(path);
+            await using var outputStream = new StreamWriter(streamSet.OutputStream);
             foreach (var file in files)
             {
-                await OutputStream.WriteAsync(Path.GetFileName(file) + '\n');
-                await OutputStream.FlushAsync();
+                await outputStream.WriteLineAsync(Path.GetFileName(file));
             }
+            await outputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await ErrorStream.WriteLineAsync(e.Message);
-            await ErrorStream.FlushAsync();
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
+            await errorStream.WriteLineAsync(e.Message);
+            await errorStream.FlushAsync();
             return 1;
         }
+
         return 0;
     }
 }

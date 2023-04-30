@@ -9,8 +9,6 @@ public class WcCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "wc";
 
-    public override ICommandExecutable Build(IEnumerable<string> tokens)
-    {
-        return new WcCommandExecutable(tokens);
-    }
+    public override ICommandExecutable Build(IEnumerable<string> tokens) =>
+        new WcCommandExecutable(tokens);
 }
