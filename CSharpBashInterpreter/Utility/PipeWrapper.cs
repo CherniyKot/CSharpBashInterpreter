@@ -11,7 +11,7 @@ public class PipeWrapper
     public long Position { get; set; }
     public long Length { get; set; }
 
-    public event Action CloseEvent;
+    public event Action? CloseEvent;
 
     public PipeWrapper()
     {
@@ -21,8 +21,6 @@ public class PipeWrapper
 
     public void Close()
     {
-        CloseEvent();
-        // Pipe.Reader.Complete();
-        // Pipe.Writer.Complete();
+        CloseEvent?.Invoke();
     }
 }
