@@ -4,6 +4,11 @@ using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Meta;
 
+/// <summary>
+/// Executable for bash pipes functionality.
+/// Use streams from <see cref="StreamSet"/>
+/// and copy content from reading stream to writing stream
+/// </summary>
 public class PipeCommandExecutable : BaseCommandExecutable
 {
     private readonly ICommandExecutable _left;
