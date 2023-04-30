@@ -21,7 +21,7 @@ public class CatTests
             using var reader = new StreamReader(pipe.Reader.AsStream());
             catCommandExecutable.OutputStream = writer;
             catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(testText);
+            reader.ReadToEndAsync().Result.Should().Be(testText + Environment.NewLine);
         }
         finally
         {
@@ -32,11 +32,11 @@ public class CatTests
     [Fact]
     public void TestCatOnMultipleFiles()
     {
-        var tempFiles = new List<string>() { "cat" };
+        var tempFiles = new List<string> { "cat" };
         var testTexts = new List<string>();
         for (var i = 0; i < 10; i++)
         {
-            tempFiles.Add(System.IO.Path.GetTempFileName());
+            tempFiles.Add(Path.GetTempFileName());
             testTexts.Add(Faker.Lorem.Paragraph());
             File.WriteAllText(tempFiles.Last(), testTexts.Last());
         }
@@ -50,7 +50,7 @@ public class CatTests
             using var reader = new StreamReader(pipe.Reader.AsStream());
             catCommandExecutable.OutputStream = writer;
             catCommandExecutable.ExecuteAsync().Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts));
+            reader.ReadToEndAsync().Result.Should().Be(string.Join("", testTexts) + Environment.NewLine);
         }
         finally
         {

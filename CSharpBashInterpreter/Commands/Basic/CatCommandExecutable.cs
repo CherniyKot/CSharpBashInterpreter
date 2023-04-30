@@ -3,7 +3,7 @@
 /// <summary>
 /// Executable for bash cat command
 /// Takes list of tokens starting with "cat" and processes the rest of them as arguments
-/// Without arguments consumes strings from input stream and copies them to the output stream
+/// Without arguments consumes strings from input stream snd copies them to the output stream
 /// Arguments are interpreted as list of files and "-" strings
 /// Concatenates contents of files (and input stream for "-") and copies result to the output stream
 /// </summary>
@@ -29,7 +29,7 @@ public class CatCommandExecutable : BaseCommandExecutable
                         while (InputStream.BaseStream.CanRead)
                         {
                             var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                            await OutputStream.WriteLineAsync(_buffer, 0, bytesRead);
+                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
                             await OutputStream.FlushAsync();
                         }
                     }
@@ -39,7 +39,7 @@ public class CatCommandExecutable : BaseCommandExecutable
                         while (!fileStream.EndOfStream)
                         {
                             var bytesRead = await fileStream.ReadAsync(_buffer, 0, BufferSize);
-                            await OutputStream.WriteLineAsync(_buffer, 0, bytesRead);
+                            await OutputStream.WriteAsync(_buffer, 0, bytesRead);
                             await OutputStream.FlushAsync();
                         }
                     }
@@ -59,7 +59,7 @@ public class CatCommandExecutable : BaseCommandExecutable
                 while (InputStream.BaseStream.CanRead)
                 {
                     var bytesRead = await InputStream.ReadAsync(_buffer, 0, BufferSize);
-                    await OutputStream.WriteLineAsync(_buffer, 0, bytesRead);
+                    await OutputStream.WriteAsync(_buffer, 0, bytesRead);
                     await OutputStream.FlushAsync();
                 }
             }
@@ -70,6 +70,9 @@ public class CatCommandExecutable : BaseCommandExecutable
                 return 1;
             }
         }
+
+        await OutputStream.WriteLineAsync();
+        await OutputStream.FlushAsync();
         return 0;
     }
 }
