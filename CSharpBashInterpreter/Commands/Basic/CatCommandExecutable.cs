@@ -35,7 +35,7 @@ public class CatCommandExecutable : BaseCommandExecutable
             else
                 await StreamSet.CopyToAsync(streamSet.InputStream, streamSet.OutputStream);
         }
-        catch (Exception e)
+        catch (Exception e) when(e is InvalidOperationException or NotSupportedException or IOException)
         {
             await using var errorStream = new StreamWriter(streamSet.ErrorStream);
             await errorStream.WriteLineAsync(e.Message);
