@@ -42,10 +42,16 @@ public class ContextTests
 
         var textDefault = "$a=100";
         var textWithBrackets = "${a}=100";
+        var textWithSingleQuotes = "'${a}=100'";
+        var textWithDoubleQuotes = "\"${a}=100\"";
 
         var newText1 = _contextManager.SubstituteVariablesInText(textDefault, context);
         var newText2 = _contextManager.SubstituteVariablesInText(textWithBrackets, context);
+        var newText3 = _contextManager.SubstituteVariablesInText(textWithDoubleQuotes, context);
+        var unchangedText = _contextManager.SubstituteVariablesInText(textWithSingleQuotes, context);
 
         newText1.Should().BeEquivalentTo(newText2).And.BeEquivalentTo("b=100");
+        newText3.Should().BeEquivalentTo("\"b=100\"");
+        unchangedText.Should().BeEquivalentTo(textWithSingleQuotes);
     }
 }
