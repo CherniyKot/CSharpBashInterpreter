@@ -2,12 +2,12 @@
 
 public class ParseException : Exception
 {
-    public string Tokens;
+    private readonly string _tokens;
 
     public ParseException(IEnumerable<string> tokens)
     {
-        Tokens = string.Join(' ', tokens);
+        _tokens = string.Join(' ', tokens);
     }
 
-    public override string Message => $"Can't parse string \"{Tokens}\".";
+    public override string Message => $"Can't parse string \"{_tokens}\".";
 }
