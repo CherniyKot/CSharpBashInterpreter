@@ -43,6 +43,9 @@ public class CatCommandExecutable : BaseCommandExecutable
             return 1;
         }
 
+        await using var writeStream = new StreamWriter(StreamSet.OutputStream);
+        await writeStream.WriteLineAsync();
+        await writeStream.FlushAsync();
         return 0;
     }
 }

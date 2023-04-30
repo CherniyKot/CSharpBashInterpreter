@@ -33,5 +33,9 @@ Console.ForegroundColor = ConsoleColor.Green;
 Console.WriteLine("Welcome to C# Bash Interpreter!\n");
 Console.ResetColor();
 
+Console.ForegroundColor = ConsoleColor.Green;
+Console.WriteLine("Welcome to C# Bash Interpreter!\n");
+Console.ResetColor();
+
 var tokenSource = new CancellationTokenSource();
 await interpreter.Execute(tokenSource.Token);
