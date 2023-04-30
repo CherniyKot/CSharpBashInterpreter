@@ -5,7 +5,7 @@ namespace CSharpBashInterpreter.Commands.Abstractions;
 /// <summary>
 /// Command runtime executable with built arguments
 /// </summary>
-public interface ICommandExecutable : IAsyncDisposable
+public interface ICommandExecutable
 {
     /// <summary>
     /// Run command action

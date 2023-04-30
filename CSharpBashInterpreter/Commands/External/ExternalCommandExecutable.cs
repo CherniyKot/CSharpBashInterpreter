@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using CSharpBashInterpreter.Commands.Abstractions;
 using CSharpBashInterpreter.Semantics.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.External;
 
@@ -16,7 +17,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
         _context = context;
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var startInfo = new ProcessStartInfo(Tokens.First());
 
@@ -34,7 +35,7 @@ public class ExternalCommandExecutable : BaseCommandExecutable
         }
         catch (Exception e)
         {
-            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
             await errorStream.WriteLineAsync(e.Message);
             await errorStream.FlushAsync();
         }

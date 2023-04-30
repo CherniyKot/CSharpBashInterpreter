@@ -16,7 +16,7 @@ public class CatCommandExecutable : BaseCommandExecutable
     {
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var args = Tokens.Skip(1).ToList();
         try
@@ -25,25 +25,25 @@ public class CatCommandExecutable : BaseCommandExecutable
                 foreach (var fileName in args)
                     if (fileName == "-")
                     {
-                        await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
+                        await StreamSet.CopyToAsync(streamSet.InputStream, streamSet.OutputStream);
                     }
                     else
                     {
                         await using var fileStream = File.OpenRead(fileName);
-                        await StreamSet.CopyToAsync(fileStream, StreamSet.OutputStream);
+                        await StreamSet.CopyToAsync(fileStream, streamSet.OutputStream);
                     }
             else
-                await StreamSet.CopyToAsync(StreamSet.InputStream, StreamSet.OutputStream);
+                await StreamSet.CopyToAsync(streamSet.InputStream, streamSet.OutputStream);
         }
         catch (Exception e)
         {
-            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
             await errorStream.WriteLineAsync(e.Message);
             await errorStream.FlushAsync();
             return 1;
         }
 
-        await using var writeStream = new StreamWriter(StreamSet.OutputStream);
+        await using var writeStream = new StreamWriter(streamSet.OutputStream);
         await writeStream.WriteLineAsync();
         await writeStream.FlushAsync();
         return 0;

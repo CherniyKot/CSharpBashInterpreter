@@ -23,17 +23,17 @@ public class PipeCommandExecutable : BaseCommandExecutable
         _right = parser.Parse(Tokens.SkipWhile(x => x != delimiter).Skip(1), context);
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var leftStreams = new StreamSet
         {
-            InputStream = StreamSet.InputStream,
+            InputStream = streamSet.InputStream,
             OutputStream = _centralPipe.WriterStream
         };
         var rightStreams = new StreamSet
         {
             InputStream = _centralPipe.ReaderStream,
-            OutputStream = StreamSet.OutputStream
+            OutputStream = streamSet.OutputStream
         };
 
         var leftTask = await _left.ExecuteAsync(leftStreams);

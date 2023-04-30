@@ -1,4 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -13,18 +14,18 @@ public class EchoCommandExecutable : BaseCommandExecutable
     {
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         try
         {
             var concatArgs = string.Join(' ', Tokens.Skip(1));
-            await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+            await using var outputStream = new StreamWriter(streamSet.OutputStream);
             await outputStream.WriteLineAsync(concatArgs);
             await outputStream.FlushAsync();
         }
         catch (Exception e)
         {
-            await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+            await using var errorStream = new StreamWriter(streamSet.ErrorStream);
             await errorStream.WriteLineAsync(e.Message);
             await errorStream.FlushAsync();
             return 1;

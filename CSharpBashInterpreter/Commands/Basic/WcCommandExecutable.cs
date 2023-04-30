@@ -1,4 +1,5 @@
 ﻿using CSharpBashInterpreter.Commands.Abstractions;
+using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
@@ -15,10 +16,10 @@ public class WcCommandExecutable : BaseCommandExecutable
     {
     }
 
-    protected override async Task<int> ExecuteInternalAsync()
+    protected override async Task<int> ExecuteInternalAsync(StreamSet streamSet)
     {
         var args = Tokens.Skip(1).ToList();
-        await using var outputStream = new StreamWriter(StreamSet.OutputStream);
+        await using var outputStream = new StreamWriter(streamSet.OutputStream);
         if (args.Any())
         {
             long totalLines = 0;
@@ -47,7 +48,7 @@ public class WcCommandExecutable : BaseCommandExecutable
                 }
                 catch (Exception e)
                 {
-                    await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+                    await using var errorStream = new StreamWriter(streamSet.ErrorStream);
                     await errorStream.WriteLineAsync(e.Message);
                     await errorStream.FlushAsync();
                     return 1;
@@ -59,14 +60,14 @@ public class WcCommandExecutable : BaseCommandExecutable
         }
         else
         {
-            using var inputStream = new StreamReader(StreamSet.InputStream);
+            using var inputStream = new StreamReader(streamSet.InputStream);
             try
             {
                 var lines = 0;
                 var words = 0;
                 var bytes = 0;
                 var encoding = inputStream.CurrentEncoding;
-                while (StreamSet.InputStream.CanRead)
+                while (streamSet.InputStream.CanRead)
                 {
                     var result = await inputStream.ReadLineAsync() ?? "";
                     lines++;
@@ -78,7 +79,7 @@ public class WcCommandExecutable : BaseCommandExecutable
             }
             catch (Exception e)
             {
-                await using var errorStream = new StreamWriter(StreamSet.ErrorStream);
+                await using var errorStream = new StreamWriter(streamSet.ErrorStream);
                 await errorStream.WriteLineAsync(e.Message);
                 await errorStream.FlushAsync();
                 return 1;
