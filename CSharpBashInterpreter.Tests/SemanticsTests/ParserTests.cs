@@ -3,7 +3,6 @@ using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Exceptions;
 using CSharpBashInterpreter.Semantics.Context;
 using CSharpBashInterpreter.Semantics.Parsing;
-using CSharpBashInterpreter.Utility;
 using FluentAssertions;
 
 namespace CSharpBashInterpreter.Tests.SemanticsTests;

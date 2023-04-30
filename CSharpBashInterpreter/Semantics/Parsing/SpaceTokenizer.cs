@@ -4,8 +4,8 @@ using CSharpBashInterpreter.Utility;
 namespace CSharpBashInterpreter.Semantics.Parsing;
 
 /// <summary>
-///     Implementation of <see cref="ITokenizer" />, who emulating
-///     equal logic of parsing like bash
+/// Implementation of <see cref="ITokenizer" />, who emulating
+/// equal logic of parsing like bash
 /// </summary>
 public class SpaceTokenizer : ITokenizer
 {
