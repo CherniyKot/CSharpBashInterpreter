@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.IO.Pipelines;
-using CommandLine;
+﻿using System.IO.Pipelines;
 using CSharpBashInterpreter.Commands.Basic;
 using CSharpBashInterpreter.Utility;
 using Faker;
@@ -27,14 +25,13 @@ public class GrepTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().StartWith("1:"+testText.Split(Environment.NewLine).First());
+            reader.ReadToEndAsync().Result.Should().StartWith($"1:{testText.Split(Environment.NewLine).First()}");
         }
         finally
         {
             File.Delete(tempFileName);
         }
     }
-
 
     [Fact]
     public void GrepTest2()
@@ -46,7 +43,8 @@ public class GrepTests
             var testText = String.Join(Environment.NewLine, testParagraphs);
             File.WriteAllText(tempFileName, testText);
 
-            var grepCommandExecutable = new GrepCommandRepresentation().Build(new[] { "grep", testParagraphs[2].Split().First(), tempFileName });
+            var grepCommandExecutable = new GrepCommandRepresentation()
+                .Build(new[] { "grep", testParagraphs[2].Split().First(), tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
             var streams = new StreamSet
@@ -54,14 +52,13 @@ public class GrepTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            reader.ReadToEndAsync().Result.Should().Contain("3:"+testParagraphs[2]);
+            reader.ReadToEndAsync().Result.Should().Contain($"3:{testParagraphs[2]}");
         }
         finally
         {
             File.Delete(tempFileName);
         }
     }
-
 
     [Fact]
     public void GrepTestIFlag()
@@ -70,17 +67,15 @@ public class GrepTests
         try
         {
             var testWord = Lorem.GetFirstWord();
-            var testText = String.Join(Environment.NewLine,
-                new[]
-                {
-                    testWord,
-                    testWord.ToUpper(),
-                    testWord.ToLower(),
-                    char.ToUpper(testWord[0]) + new string(testWord.Skip(1).ToArray())
-                });
+            var testText = string.Join(Environment.NewLine,
+                testWord,
+                testWord.ToUpper(),
+                testWord.ToLower(),
+                char.ToUpper(testWord[0]) + new string(testWord.Skip(1).ToArray()));
             File.WriteAllText(tempFileName, testText);
 
-            var grepCommandExecutable = new GrepCommandRepresentation().Build(new[] { "grep", "-i", testWord.ToUpper(), tempFileName });
+            var grepCommandExecutable = new GrepCommandRepresentation()
+                .Build(new[] { "grep", "-i", testWord.ToUpper(), tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
             var streams = new StreamSet
@@ -96,7 +91,6 @@ public class GrepTests
         }
     }
 
-
     [Fact]
     public void GrepTestWFlag()
     {
@@ -107,7 +101,8 @@ public class GrepTests
             var testText = string.Join(Environment.NewLine, testWord, testWord+testWord+testWord, testWord+testWord);
             File.WriteAllText(tempFileName, testText);
 
-            var grepCommandExecutable = new GrepCommandRepresentation().Build(new[] { "grep", "-w", testWord, tempFileName });
+            var grepCommandExecutable = new GrepCommandRepresentation()
+                .Build(new[] { "grep", "-w", testWord, tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
             var streams = new StreamSet
@@ -115,7 +110,7 @@ public class GrepTests
                 OutputStream = pipe.Writer.AsStream(),
             };
             grepCommandExecutable.ExecuteAsync(streams).Result.Should().Be(0);
-            var result =reader.ReadToEndAsync().Result;
+            var result = reader.ReadToEndAsync().Result;
             result.Should().NotContainAny(testWord + testWord + testWord, testWord + testWord);
             result.Should().Contain(testWord);
         }
@@ -140,7 +135,8 @@ public class GrepTests
             );
             File.WriteAllText(tempFileName, testText);
 
-            var grepCommandExecutable = new GrepCommandRepresentation().Build(new[] { "grep", "-A 3", testWord, tempFileName });
+            var grepCommandExecutable = new GrepCommandRepresentation()
+                .Build(new[] { "grep", "-A 3", testWord, tempFileName });
             var pipe = new Pipe();
             using var reader = new StreamReader(pipe.Reader.AsStream());
             var streams = new StreamSet

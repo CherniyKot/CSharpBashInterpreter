@@ -1,12 +1,15 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using CommandLine;
+﻿using CommandLine;
 using CSharpBashInterpreter.Commands.Abstractions;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Representation for bash grep command
+/// </summary>
 public class GrepCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "grep";
+
     public override ICommandExecutable Build(IEnumerable<string> tokens) =>
         new GrepCommandExecutable(tokens, ParseFlagsFromTokens);
 
@@ -32,13 +35,16 @@ public class GrepCommandRepresentation : BaseCommandRepresentation
     {
         [Value(0, Required = true)]
         public string Pattern { get; set; } = string.Empty;
+
         [Value(1)]
         public IEnumerable<string> FileNames { get; set; } = ArraySegment<string>.Empty;
 
         [Option('w')]
         public bool UseWordMatch { get; set; } = false;
+
         [Option('i')]
         public bool CaseInsensitive { get; set; } = false;
+
         [Option('A')]
         public int? AdditionalWordMatches { get; set; } = null;
 

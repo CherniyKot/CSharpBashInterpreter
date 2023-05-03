@@ -4,6 +4,9 @@ using CSharpBashInterpreter.Utility;
 
 namespace CSharpBashInterpreter.Commands.Basic;
 
+/// <summary>
+/// Executable for bash grep command. Can use custom parsing function of user input arguments
+/// </summary>
 public class GrepCommandExecutable : BaseCommandExecutable
 {
     private readonly Func<IEnumerable<string>, GrepFlagsOptions> _parser;
@@ -81,7 +84,6 @@ public class GrepCommandExecutable : BaseCommandExecutable
         var isMatchPredicate = CreateMatchPredicate(flags);
         if (!flags.AdditionalWordMatches.HasValue)
             return collection.Where(isMatchPredicate);
-
 
         var content = collection.Select((line, index) => (line, index)).ToArray();
         var matches = content.Where(tuple => isMatchPredicate(tuple.line)).ToArray();
