@@ -32,7 +32,7 @@ public sealed class ConsoleInterpreter
 
     private async Task ExecuteLoop(IContext context)
     {
-        Console.Write($"[{DateTime.Now.ToShortTimeString()}] SharpBash> ");
+        PrintPrefixInfo();
         try
         {
             var line = Console.ReadLine() ?? "";
@@ -50,6 +50,15 @@ public sealed class ConsoleInterpreter
         {
             PrintErrorToConsole(e.Message);
         }
+    }
+
+    private static void PrintPrefixInfo()
+    {
+        Console.Write($"[{DateTime.Now.ToLongTimeString()}]");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write(" SharpBash");
+        Console.ResetColor();
+        Console.Write("> ");
     }
 
     private static void PrintErrorToConsole(string message)
