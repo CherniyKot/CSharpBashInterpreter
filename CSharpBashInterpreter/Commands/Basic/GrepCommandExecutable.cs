@@ -6,9 +6,11 @@ namespace CSharpBashInterpreter.Commands.Basic;
 
 public class GrepCommandExecutable : BaseCommandExecutable
 {
-    private readonly TryParseFunction<GrepFlagsOptions> _parser;
+    private readonly Func<IEnumerable<string>, GrepFlagsOptions> _parser;
 
-    public GrepCommandExecutable(IEnumerable<string> tokens, TryParseFunction<GrepFlagsOptions> parser) : base(tokens)
+    public GrepCommandExecutable(IEnumerable<string> tokens,
+        Func<IEnumerable<string>, GrepFlagsOptions> parser)
+        : base(tokens)
     {
         _parser = parser;
     }
@@ -17,23 +19,28 @@ public class GrepCommandExecutable : BaseCommandExecutable
     {
         try
         {
-            if (!_parser(Tokens.Skip(1), out var flags))
-                return 1;
+            var flags = _parser(Tokens.Skip(1));
 
-            var files = await ReadFilesFromSystem(flags.FileNames);
-            var matches = FormatMatchingLines(files, flags);
+            string matches;
+            if (flags.FileNames.Any())
+            {
+                var files = await ReadFilesFromSystem(flags.FileNames);
+                matches = MatchAndFormatFromFiles(files, flags);
+            }
+            else
+                matches = await MatchAndFormatFromStream(streamSet.InputStream, flags);
 
             await using var output = new StreamWriter(streamSet.OutputStream);
             await output.WriteLineAsync(matches);
             await output.FlushAsync();
         }
-        catch (Exception exception)
+        catch (Exception exception) when(exception is IOException or NotSupportedException or ArgumentException)
         {
             await using var output = new StreamWriter(streamSet.ErrorStream);
             await output.WriteLineAsync(exception.Message);
             await output.FlushAsync();
 
-            return 2;
+            return exception is ArgumentException ? 2 : 1;
         }
 
         return 0;
@@ -46,13 +53,28 @@ public class GrepCommandExecutable : BaseCommandExecutable
             return new FileData(fileName, lines.Select((str, i) => new Line(i + 1, str)));
         }));
 
-    private static string FormatMatchingLines(ICollection<FileData> files, GrepFlagsOptions flags) =>
+    private static string MatchAndFormatFromFiles(ICollection<FileData> files, GrepFlagsOptions flags) =>
         files
             .SelectMany(file => GetMatchesContent(file.Content, flags)
                 .Select(line => files.Count > 1
                     ? $"{file.FileName}:{line.Index}:{line.Text}"
                     : $"{line.Index}:{line.Text}"))
             .AggregateToString();
+
+    private static async Task<string> MatchAndFormatFromStream(Stream input, GrepFlagsOptions flags)
+    {
+        var index = 1;
+        var content = new List<Line>();
+        using var reader = new StreamReader(input);
+        while (input.CanRead)
+        {
+            var line = await reader.ReadLineAsync() ?? "";
+            content.Add(new Line(index++, line));
+        }
+        return GetMatchesContent(content, flags)
+            .Select(line => $"{line.Index}:{line.Text}")
+            .AggregateToString();
+    }
 
     private static IEnumerable<Line> GetMatchesContent(IEnumerable<Line> collection, GrepFlagsOptions flags)
     {

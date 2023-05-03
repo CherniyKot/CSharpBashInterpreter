@@ -7,29 +7,32 @@ namespace CSharpBashInterpreter.Commands.Basic;
 public class GrepCommandRepresentation : BaseCommandRepresentation
 {
     public override string Name => "grep";
-    public override ICommandExecutable Build(IEnumerable<string> tokens)
-    {
-        return new GrepCommandExecutable(tokens, ParseFlagsFromTokens);
-    }
+    public override ICommandExecutable Build(IEnumerable<string> tokens) =>
+        new GrepCommandExecutable(tokens, ParseFlagsFromTokens);
 
-    private static bool ParseFlagsFromTokens(IEnumerable<string> tokens,
-        [NotNullWhen(true)] out GrepFlagsOptions? onsuccess)
+    private static GrepFlagsOptions ParseFlagsFromTokens(IEnumerable<string> tokens)
     {
-        onsuccess = null;
         var result = Parser.Default.ParseArguments<GrepConsoleFlags>(tokens);
 
-        if (result is not Parsed<GrepConsoleFlags> flagsResult)
-            return false;
+        if (result is not Parsed<GrepConsoleFlags> flagsResult || flagsResult.Errors.Any())
+            throw new ArgumentException(
+                $"Incorrect arguments: {string.Join($";\n", result.Errors.Select(x => x.ToString()))}");
 
-        onsuccess = flagsResult.Value.ToOptions();
-        return true;
+        var value = flagsResult.Value;
+        if (string.IsNullOrWhiteSpace(value.Pattern))
+            throw new ArgumentException("Pattern can't be empty");
+
+        if (value.AdditionalWordMatches is < 1)
+            throw new ArgumentException("Additional words need be great or equal than one");
+
+        return value.ToOptions();
     }
 
     private class GrepConsoleFlags
     {
-        [Value(0)]
+        [Value(0, Required = true)]
         public string Pattern { get; set; } = string.Empty;
-        [Value(1, Min=1)]
+        [Value(1)]
         public IEnumerable<string> FileNames { get; set; } = ArraySegment<string>.Empty;
 
         [Option('w')]
